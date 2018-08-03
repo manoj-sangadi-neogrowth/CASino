@@ -50,7 +50,7 @@ class CASino::SessionsController < CASino::ApplicationController
     if params[:service].present? && service_allowed?(params[:service])
       redirect_to params[:service], status: :see_other 
     end
-    redirect_to login_path(service: service)
+    redirect_to login_path(service: params[:service])
   end
 
   def validate_otp
