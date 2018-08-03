@@ -49,6 +49,7 @@ class CASino::SessionsController < CASino::ApplicationController
     @url = params[:url]
     if params[:service].present? && service_allowed?(params[:service])
       redirect_to params[:service], status: :see_other
+      redirect_to_login
     end
   end
 
@@ -82,5 +83,10 @@ class CASino::SessionsController < CASino::ApplicationController
   def load_ticket_granting_ticket_from_parameter
     @ticket_granting_ticket = find_valid_ticket_granting_ticket(params[:tgt], request.user_agent, ignore_two_factor: true)
     redirect_to login_path if @ticket_granting_ticket.nil?
+  end
+
+  def redirect_to_login
+    # redirect_to login_path(service: params[:service])
+    redirect_to login_path
   end
 end
