@@ -87,7 +87,7 @@ class CASino::SessionsController < CASino::ApplicationController
   end
 
   def redirect_to_login
-    # redirect_to login_path(service: params[:service])
-    redirect_to login_path
+    redirect_to login_path(service: params[:service])
+    #redirect_to login_path
   end
 end
