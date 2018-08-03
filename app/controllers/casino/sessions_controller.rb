@@ -46,6 +46,7 @@ class CASino::SessionsController < CASino::ApplicationController
 
   def logout
     sign_out
+    p params
     @url = params[:url]
     if params[:service].present? && service_allowed?(params[:service])
       redirect_to params[:service], status: :see_other 
