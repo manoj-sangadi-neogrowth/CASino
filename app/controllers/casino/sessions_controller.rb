@@ -45,16 +45,12 @@ class CASino::SessionsController < CASino::ApplicationController
   end
 
   def logout
-    # sign_out
-    service = params[:service]
     sign_out
+    @url = params[:url]
+    if params[:service].present? && service_allowed?(params[:service])
+      redirect_to params[:service], status: :see_other 
+    end
     redirect_to login_path(service: service)
-    
-    # @url = params[:url]
-    # if params[:service].present? && service_allowed?(params[:service])
-    #   redirect_to params[:service], status: :see_other
-      
-    # end
   end
 
   def validate_otp
