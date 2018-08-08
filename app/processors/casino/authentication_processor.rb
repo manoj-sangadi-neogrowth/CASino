@@ -7,9 +7,7 @@ module CASino::AuthenticationProcessor
     authentication_result = nil
     authenticators.each do |authenticator_name, authenticator|
       begin
-        data = authenticator.validate(username, password)
-        p "---->data===>>"
-        p data
+        data = authenticator.validate(username, password,authenticator_name)
       rescue CASino::Authenticator::AuthenticatorError => e
         Rails.logger.error "Authenticator '#{authenticator_name}' (#{authenticator.class}) raised an error: #{e}"
       end
