@@ -15,7 +15,7 @@ namespace :casino do
         puts "'#{authenticator_name}' (#{authenticator.class}):"
         print '  '
         begin
-          if data = authenticator.validate(username, password,authenticator_name)
+          if data = authenticator.validate(username, password)
             p data
           else
             puts "Invalid credentials"
