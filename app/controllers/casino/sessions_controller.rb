@@ -20,6 +20,10 @@ class CASino::SessionsController < CASino::ApplicationController
     redirect_to(params[:service]) if params[:gateway] && params[:service].present?
   end
 
+  def custom_login
+
+  end
+  
   def create
     validation_result = validate_login_credentials(params[:username], params[:password])
     if !validation_result
