@@ -1,5 +1,5 @@
 (function(win, doc) {
-  var url = win.CASino.url('login'),
+  var url = win.CASino.url('login1'),
       cookie_regex = /(^|;)\s*tgt=/,
       ready_bound = false;
 
