@@ -8,7 +8,8 @@ CASino::Engine.routes.draw do
   post 'login' => 'sessions#create'
   get 'logout' => 'sessions#logout'
   post 'validate_otp' => 'sessions#validate_otp'
-
+  get  'custom_login' => 'sessions#custom_login'
+  
   resources :login_attempts, only: [:index]
 
   get 'destroy-other-sessions' => 'sessions#destroy_others'
@@ -21,7 +22,7 @@ CASino::Engine.routes.draw do
 
   get 'authTokenLogin' => 'auth_tokens#login'
 
-  root to: redirect('login')
+  root to: redirect('custom_login')
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
