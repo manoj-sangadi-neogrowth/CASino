@@ -40,7 +40,7 @@ class CASino::SessionsController < CASino::ApplicationController
     redirect_to sessions_path
   end
 
-  def destroy_others
+  def destroy_others  
     current_user
       .ticket_granting_tickets
       .where('id != ?', current_ticket_granting_ticket.id)
