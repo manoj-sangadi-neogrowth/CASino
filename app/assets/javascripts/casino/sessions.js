@@ -1,8 +1,8 @@
 (function(win, doc) {
-  var url = win.CASino.url('login1'),
+  var url = win.CASino.url('custom_login'),
       cookie_regex = /(^|;)\s*tgt=/,
       ready_bound = false;
-
+  console.log("0000",win.CASino.url('custom_login'))
   function checkCookieExists() {
     var serviceEl = doc.getElementById('service'),
         service = serviceEl ? serviceEl.getAttribute('value') : null;
