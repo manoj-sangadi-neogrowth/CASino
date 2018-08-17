@@ -1,6 +1,6 @@
 CASino::Engine.routes.draw do
   mount CASino::API => '/api'
-  oot to: redirect('custom_login')
+  root to: redirect('custom_login')
   resources :sessions, only: [:index, :destroy]
   resources :two_factor_authenticators, only: [:new, :create, :destroy]
 
