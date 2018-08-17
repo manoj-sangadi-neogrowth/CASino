@@ -21,9 +21,9 @@ class CASino::SessionsController < CASino::ApplicationController
   end
 
   def custom_login
-
+    redirect_to custom_login_path
   end
-  
+
   def create
     validation_result = validate_login_credentials(params[:username], params[:password])
     if !validation_result
