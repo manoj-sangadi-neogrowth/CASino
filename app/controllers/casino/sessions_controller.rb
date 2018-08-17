@@ -66,8 +66,7 @@ class CASino::SessionsController < CASino::ApplicationController
 
   def show_login_error(message)
     flash.now[:error] = message
-    # render :new, status: :forbidden
-    render 'service_not_allowed',status: :forbidden
+    render :new, status: :forbidden
   end
 
   def validate_login_ticket
