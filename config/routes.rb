@@ -1,5 +1,5 @@
 CASino::Engine.routes.draw do
-  root to: redirect('custom_login')
+  # root to: redirect('custom_login')
   mount CASino::API => '/api'
   
   resources :sessions, only: [:index, :destroy]
@@ -23,7 +23,7 @@ CASino::Engine.routes.draw do
 
   get 'authTokenLogin' => 'auth_tokens#login'
 
-  # root to: redirect('login')
+  root to: redirect('login')
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
