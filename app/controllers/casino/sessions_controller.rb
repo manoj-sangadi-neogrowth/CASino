@@ -54,12 +54,12 @@ class CASino::SessionsController < CASino::ApplicationController
     p params
     @url = params[:url]
     p params[:service]
-    p service_allowed?(params[:service])
-    p @url
-    params[:service] = "http://localhost:3001"
-    if params[:service].present? && service_allowed?(params[:service])
+    p service_allowed?(params[:destination])
+    # params[:service] = "http://localhost:3001"
+    # if params[:service].present? && service_allowed?(params[:service])
+    if params[:destination].present? && service_allowed?(params[:destination])
       p "in if condition"
-      redirect_to params[:service], status: :see_other 
+      redirect_to params[:destination], status: :see_other 
     else
       redirect_to login_path(service: params[:destination])
     end
