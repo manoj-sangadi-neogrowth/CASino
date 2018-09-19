@@ -48,6 +48,7 @@ class CASino::SessionsController < CASino::ApplicationController
   end
 
   def logout
+    p "in logout"
     sign_out
     p "999999999"
     p params
