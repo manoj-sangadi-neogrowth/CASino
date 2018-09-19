@@ -53,6 +53,7 @@ class CASino::SessionsController < CASino::ApplicationController
     p "999999999"
     p params
     @url = params[:url]
+    p params[:service]
     p service_allowed?(params[:service])
     p @url
     if params[:service].present? && service_allowed?(params[:service])
