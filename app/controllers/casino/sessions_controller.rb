@@ -7,6 +7,8 @@ class CASino::SessionsController < CASino::ApplicationController
   before_action :ensure_service_allowed, only: [:new, :create]
   before_action :load_ticket_granting_ticket_from_parameter, only: [:validate_otp]
   before_action :ensure_signed_in, only: [:index, :destroy]
+  before_action :set_logout_param, only: [:new]
+
   @@is_logout=false
 
   def index
@@ -16,15 +18,6 @@ class CASino::SessionsController < CASino::ApplicationController
   end
 
   def new
-    p "000000-------"
-    p @@is_logout
-    if @@is_logout
-      params.merge!({logout: true})
-      p params
-    end
-    @@is_logout=false;
-    p "8888888888"
-    p params
     tgt = current_ticket_granting_ticket
     return handle_signed_in(tgt) unless params[:renew] || tgt.nil?
     if params[:gateway] && params[:service].present?
@@ -60,27 +53,16 @@ class CASino::SessionsController < CASino::ApplicationController
   def logout
     p "in logout"
     sign_out
-    p "999999999"
     @url = params[:url]
-    # p params[:service]
-    # p service_allowed?(params[:destination])
-    # p params.merge!({logout: true})
-    # p "params-->>>"
-    # p params
-    # params[:service] = "http://localhost:3001"
+    p "params-->>>"
+    p params
     # if params[:service].present? && service_allowed?(params[:service])
     if params[:destination].present? && service_allowed?(params[:destination])
       p "in if condition"
       @@is_logout=true;
-      params.merge!({logout: true})
-      p "params-->>>"
-      p params
       redirect_to params[:destination], status: :see_other 
     else
       @@is_logout=true;
-      params.merge!({logout: true})
-      p "params-->>>"
-    p params
       redirect_to login_path(service: params[:destination])
     end
     p "here"
@@ -127,5 +109,11 @@ class CASino::SessionsController < CASino::ApplicationController
   def redirect_to_login
     redirect_to login_path(service: params[:service])
     #redirect_to login_path
+  end
+
+  def set_logout_param
+    if @@is_logout
+      params.merge!({logout: true})
+    end
   end
 end
