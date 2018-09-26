@@ -18,6 +18,8 @@ class CASino::SessionsController < CASino::ApplicationController
   def new
     params.merge!({logout: @@is_logout}) if @@is_logout
     @@is_logout=false;
+    p "8888888888"
+    p params
     tgt = current_ticket_granting_ticket
     return handle_signed_in(tgt) unless params[:renew] || tgt.nil?
     if params[:gateway] && params[:service].present?
