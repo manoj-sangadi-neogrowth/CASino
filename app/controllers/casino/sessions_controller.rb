@@ -15,15 +15,11 @@ class CASino::SessionsController < CASino::ApplicationController
   end
 
   def new
-    p "in new"
-    p @@is_logout
-    p params.merge!({logout: @@is_logout})
-    p params
+    params.merge!({logout: @@is_logout}) if @@is_logout
     @@is_logout=false;
     tgt = current_ticket_granting_ticket
     return handle_signed_in(tgt) unless params[:renew] || tgt.nil?
     if params[:gateway] && params[:service].present?
-      p "iam in new "
       redirect_to(params[:service]) 
     end
   end
@@ -73,7 +69,6 @@ class CASino::SessionsController < CASino::ApplicationController
       @@is_logout=true;
       redirect_to params[:destination], status: :see_other 
     else
-      p params
       @@is_logout=true;
       redirect_to login_path(service: params[:destination])
     end
