@@ -55,7 +55,7 @@ class CASino::SessionsController < CASino::ApplicationController
     @url = params[:url]
     p params[:service]
     p service_allowed?(params[:destination])
-    p params[:logout] = true
+    params[:logout] = true
     # params[:service] = "http://localhost:3001"
     # if params[:service].present? && service_allowed?(params[:service])
     if params[:destination].present? && service_allowed?(params[:destination])
