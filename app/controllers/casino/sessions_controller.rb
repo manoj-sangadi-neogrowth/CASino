@@ -65,18 +65,22 @@ class CASino::SessionsController < CASino::ApplicationController
     # p params[:service]
     # p service_allowed?(params[:destination])
     # p params.merge!({logout: true})
-    p "params-->>>"
-    p params
+    # p "params-->>>"
+    # p params
     # params[:service] = "http://localhost:3001"
     # if params[:service].present? && service_allowed?(params[:service])
     if params[:destination].present? && service_allowed?(params[:destination])
       p "in if condition"
       @@is_logout=true;
       params.merge!({logout: true})
+      p "params-->>>"
+      p params
       redirect_to params[:destination], status: :see_other 
     else
       @@is_logout=true;
       params.merge!({logout: true})
+      p "params-->>>"
+    p params
       redirect_to login_path(service: params[:destination])
     end
     p "here"
