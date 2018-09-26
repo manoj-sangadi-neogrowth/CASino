@@ -15,6 +15,8 @@ class CASino::SessionsController < CASino::ApplicationController
   end
 
   def new
+    p "in new"
+    p params
     tgt = current_ticket_granting_ticket
     return handle_signed_in(tgt) unless params[:renew] || tgt.nil?
     redirect_to(params[:service]) if params[:gateway] && params[:service].present?
@@ -54,8 +56,7 @@ class CASino::SessionsController < CASino::ApplicationController
     @url = params[:url]
     # p params[:service]
     # p service_allowed?(params[:destination])
-    p params.merge!({logout: :true})
-    p params.to_h.merge!({logout: :true})
+    p params.merge!({logout: true})
     p "params-->>>"
     p params
     # params[:service] = "http://localhost:3001"
