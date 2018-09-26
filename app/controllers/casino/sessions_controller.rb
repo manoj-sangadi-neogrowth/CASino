@@ -7,7 +7,7 @@ class CASino::SessionsController < CASino::ApplicationController
   before_action :ensure_service_allowed, only: [:new, :create]
   before_action :load_ticket_granting_ticket_from_parameter, only: [:validate_otp]
   before_action :ensure_signed_in, only: [:index, :destroy]
-
+  @@is_logout=false
   def index
     @ticket_granting_tickets = current_user.ticket_granting_tickets.active
     @two_factor_authenticators = current_user.two_factor_authenticators.active
@@ -16,16 +16,22 @@ class CASino::SessionsController < CASino::ApplicationController
 
   def new
     p "in new"
+    p @@is_logout
+    p params.merge!({logout: @@is_logout})
     p params
     tgt = current_ticket_granting_ticket
     return handle_signed_in(tgt) unless params[:renew] || tgt.nil?
-    redirect_to(params[:service]) if params[:gateway] && params[:service].present?
+    if params[:gateway] && params[:service].present?
+      @@is_logout=false
+      redirect_to(params[:service]) 
+    end
   end
 
   def custom_login
   end
 
   def create
+    @@is_logout=false;
     validation_result = validate_login_credentials(params[:username], params[:password])
     if !validation_result
       log_failed_login params[:username]
@@ -56,16 +62,18 @@ class CASino::SessionsController < CASino::ApplicationController
     @url = params[:url]
     # p params[:service]
     # p service_allowed?(params[:destination])
-    p params.merge!({logout: true})
-    p "params-->>>"
-    p params
+    # p params.merge!({logout: true})
+    # p "params-->>>"
+    # p params
     # params[:service] = "http://localhost:3001"
     # if params[:service].present? && service_allowed?(params[:service])
     if params[:destination].present? && service_allowed?(params[:destination])
       p "in if condition"
+      @@is_logout=true;
       redirect_to params[:destination], status: :see_other 
     else
       p params
+      @@is_logout=true;
       redirect_to login_path(service: params[:destination])
     end
     p "here"
