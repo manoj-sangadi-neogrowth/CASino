@@ -18,7 +18,10 @@ class CASino::SessionsController < CASino::ApplicationController
   def new
     p "000000-------"
     p @@is_logout
-    params.merge({logout: @@is_logout}) if @@is_logout
+    if @@is_logout
+      params.merge!({logout: true})
+      p params
+    end
     @@is_logout=false;
     p "8888888888"
     p params
@@ -69,9 +72,11 @@ class CASino::SessionsController < CASino::ApplicationController
     if params[:destination].present? && service_allowed?(params[:destination])
       p "in if condition"
       @@is_logout=true;
+      params.merge!({logout: true})
       redirect_to params[:destination], status: :see_other 
     else
       @@is_logout=true;
+      params.merge!({logout: true})
       redirect_to login_path(service: params[:destination])
     end
     p "here"
