@@ -55,6 +55,7 @@ class CASino::SessionsController < CASino::ApplicationController
     @url = params[:url]
     p params[:service]
     p service_allowed?(params[:destination])
+    p params[:logout] = true
     # params[:service] = "http://localhost:3001"
     # if params[:service].present? && service_allowed?(params[:service])
     if params[:destination].present? && service_allowed?(params[:destination])
@@ -76,6 +77,11 @@ class CASino::SessionsController < CASino::ApplicationController
   end
 
   private
+
+  # def show_login_error_for_api(message)
+  #   flash.now[:error] = message
+  #   return :new, status: :forbidden
+  # end
 
   def show_login_error(message)
     flash.now[:error] = message
