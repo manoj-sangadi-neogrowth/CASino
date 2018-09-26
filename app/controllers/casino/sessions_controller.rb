@@ -16,7 +16,9 @@ class CASino::SessionsController < CASino::ApplicationController
   end
 
   def new
-    params.merge!({logout: @@is_logout}) if @@is_logout
+    p "000000-------"
+    p @@is_logout
+    params.merge({logout: @@is_logout}) if @@is_logout
     @@is_logout=false;
     p "8888888888"
     p params
