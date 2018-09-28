@@ -31,8 +31,9 @@ module CASino::SessionsHelper
     !current_ticket_granting_ticket.nil?
   end
 
-  def sign_in(authentication_result, options = {}, is_api = false)
-    p is_api
+  def sign_in(authentication_result, options = {})
+    p options
+    p options[:is_api]
     tgt = acquire_ticket_granting_ticket(authentication_result, request.user_agent, request.remote_ip, options)
     p "tgt"
     p tgt
