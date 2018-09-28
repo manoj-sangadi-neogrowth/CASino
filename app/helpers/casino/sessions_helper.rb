@@ -31,11 +31,11 @@ module CASino::SessionsHelper
     !current_ticket_granting_ticket.nil?
   end
 
-  def sign_in(authentication_result, options = {})
+  def sign_in(authentication_result, options = {}, is_api = false)
     tgt = acquire_ticket_granting_ticket(authentication_result, request.user_agent, request.remote_ip, options)
     create_login_attempt(tgt.user, true)
     set_tgt_cookie(tgt)
-    handle_signed_in(tgt, options)
+    handle_signed_in(tgt, options, is_api)
   end
 
   def set_tgt_cookie(tgt)
@@ -65,30 +65,52 @@ module CASino::SessionsHelper
 
   private
 
-  def handle_signed_in(tgt, options = {})
+  def handle_signed_in(tgt, options = {}, is_api = false)
     if tgt.awaiting_two_factor_authentication?
       @ticket_granting_ticket = tgt
       render 'casino/sessions/validate_otp'
     else
-      if params[:service].present?
-        begin
-          handle_signed_in_with_service(tgt, options)
-          return
-        rescue Addressable::URI::InvalidURIError => e
-          Rails.logger.warn "Service #{params[:service]} not valid: #{e}"
+      if is_api
+        # render json: { status: 'success' }, status: :see_other
+        if params[:service].present?
+          begin
+            handle_signed_in_with_service(tgt, options, is_api)
+            return
+          rescue Addressable::URI::InvalidURIError => e
+            Rails.logger.warn "Service #{params[:service]} not valid: #{e}"
+          end
         end
+      else
+        if params[:service].present?
+          begin
+            handle_signed_in_with_service(tgt, options)
+            return
+          rescue Addressable::URI::InvalidURIError => e
+            Rails.logger.warn "Service #{params[:service]} not valid: #{e}"
+          end
+        end
+        redirect_to sessions_path, status: :see_other
       end
-      redirect_to sessions_path, status: :see_other
     end
   end
 
-  def handle_signed_in_with_service(tgt, options)
-    if !service_allowed?(params[:service])
-      @service = params[:service]
-      render 'casino/sessions/service_not_allowed', status: 403
+  def handle_signed_in_with_service(tgt, options, is_api = false)
+    if is_api
+      if !service_allowed?(params[:service])
+        render json: { status: 'failed', message: 'Service params not allowed' }, status: 403 
+      else
+        url = acquire_service_ticket(tgt, params[:service], options).service_with_ticket_url
+        render json: { status: 'failed', message: url }, status: :see_other
+      end
     else
-      url = acquire_service_ticket(tgt, params[:service], options).service_with_ticket_url
-      redirect_to url, status: :see_other
+      if !service_allowed?(params[:service])
+        @service = params[:service]
+        render 'casino/sessions/service_not_allowed', status: 403
+      else
+        url = acquire_service_ticket(tgt, params[:service], options).service_with_ticket_url
+        redirect_to url, status: :see_other
+      end
     end
+    
   end
 end

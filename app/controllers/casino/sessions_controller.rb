@@ -34,7 +34,7 @@ class CASino::SessionsController < CASino::ApplicationController
        end
     else
       p "1234"
-      sign_in(validation_result, long_term: params[:rememberMe], credentials_supplied: true)
+      sign_in(validation_result, long_term: params[:rememberMe], credentials_supplied: true, params[:is_api])
     end
   end
 
