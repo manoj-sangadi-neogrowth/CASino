@@ -24,10 +24,16 @@ class CASino::SessionsController < CASino::ApplicationController
 
   def create
     validation_result = validate_login_credentials(params[:username], params[:password])
+    p validation_result
     if !validation_result
       log_failed_login params[:username]
-      show_login_error I18n.t('login_credential_acceptor.invalid_login_credentials')
+       if params[:is_api] 
+         show_login_error_for_api I18n.t('login_credential_acceptor.invalid_login_credentials') 
+       else 
+        show_login_error I18n.t('login_credential_acceptor.invalid_login_credentials') 
+       end
     else
+      p "1234"
       sign_in(validation_result, long_term: params[:rememberMe], credentials_supplied: true)
     end
   end
@@ -73,10 +79,9 @@ class CASino::SessionsController < CASino::ApplicationController
 
   private
 
-  # def show_login_error_for_api(message)
-  #   flash.now[:error] = message
-  #   return :new, status: :forbidden
-  # end
+  def show_login_error_for_api(message)
+    render json: { status: 'failed', message: message } and return
+  end
 
   def show_login_error(message)
     flash.now[:error] = message
@@ -84,12 +89,41 @@ class CASino::SessionsController < CASino::ApplicationController
   end
 
   def validate_login_ticket
+    if params[:is_api]  
+      validate_login_ticket_for_api
+    else
+      validate_login_ticket_for_form
+    end
+  end
+
+  def validate_login_ticket_for_api
+    params[:lt] = CASino::LoginTicket.create.ticket
     unless CASino::LoginTicket.consume(params[:lt])
-      show_login_error I18n.t('login_credential_acceptor.invalid_login_ticket')
+      show_login_error_for_api I18n.t('login_credential_acceptor.invalid_login_ticket')
+    end
+  end
+
+  def validate_login_ticket_for_form
+    unless CASino::LoginTicket.consume(params[:lt])
+        show_login_error I18n.t('login_credential_acceptor.invalid_login_ticket')
     end
   end
 
   def ensure_service_allowed
+    if params[:is_api]
+      ensure_service_allowed_for_api
+    else
+      ensure_service_allowed_for_form
+    end
+  end
+
+  def ensure_service_allowed_for_api
+    if params[:service].present? && !service_allowed?(params[:service])
+      render json: { status: 'failed', message: 'service_not_allowed' } ,status: :forbidden
+    end
+  end
+
+  def ensure_service_allowed_for_form
     if params[:service].present? && !service_allowed?(params[:service])
       render 'service_not_allowed', status: :forbidden
     end
