@@ -39,7 +39,7 @@ module CASino::SessionsHelper
     p tgt
     create_login_attempt(tgt.user, true)
     set_tgt_cookie(tgt)
-    handle_signed_in(tgt, options, is_api)
+    handle_signed_in(tgt, options)
   end
 
   def set_tgt_cookie(tgt)
@@ -69,18 +69,18 @@ module CASino::SessionsHelper
 
   private
 
-  def handle_signed_in(tgt, options = {}, is_api = false)
+  def handle_signed_in(tgt, options = {})
     p "handle sign in"
-    p is_api
+    p options[:is_api]
     if tgt.awaiting_two_factor_authentication?
       @ticket_granting_ticket = tgt
       render 'casino/sessions/validate_otp'
     else
-      if is_api
+      if options[:is_api]
         p "hhhhhh"
         if params[:service].present?
           begin
-            handle_signed_in_with_service(tgt, options, is_api)
+            handle_signed_in_with_service(tgt, options)
             return
           rescue Addressable::URI::InvalidURIError => e
             Rails.logger.warn "Service #{params[:service]} not valid: #{e}"
@@ -100,9 +100,9 @@ module CASino::SessionsHelper
     end
   end
 
-  def handle_signed_in_with_service(tgt, options, is_api = false)
+  def handle_signed_in_with_service(tgt, options)
     p "handle with service"
-    if is_api
+    if options[:is_api]
       p "in api"
       if !service_allowed?(params[:service])
         render json: { status: 'failed', message: 'Service params not allowed' }, status: 403 
