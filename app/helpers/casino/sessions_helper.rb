@@ -32,11 +32,7 @@ module CASino::SessionsHelper
   end
 
   def sign_in(authentication_result, options = {})
-    p options
-    p options[:is_api]
     tgt = acquire_ticket_granting_ticket(authentication_result, request.user_agent, request.remote_ip, options)
-    p "tgt"
-    p tgt
     create_login_attempt(tgt.user, true)
     set_tgt_cookie(tgt)
     handle_signed_in(tgt, options)
@@ -70,14 +66,11 @@ module CASino::SessionsHelper
   private
 
   def handle_signed_in(tgt, options = {})
-    p "handle sign in"
-    p options[:is_api]
     if tgt.awaiting_two_factor_authentication?
       @ticket_granting_ticket = tgt
       render 'casino/sessions/validate_otp'
     else
       if options[:is_api]
-        p "hhhhhh"
         if params[:service].present?
           begin
             handle_signed_in_with_service(tgt, options)
@@ -103,9 +96,7 @@ module CASino::SessionsHelper
   end
 
   def handle_signed_in_with_service(tgt, options)
-    p "handle with service"
     if options[:is_api]
-      p "in api"
       if !service_allowed?(params[:service])
         render json: { status: 'failed', message: 'Service params not allowed' }, status: 403 
       else
