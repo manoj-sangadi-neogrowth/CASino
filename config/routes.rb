@@ -1,5 +1,5 @@
 CASino::Engine.routes.draw do
-  # root to: redirect('custom_login')
+ 
   mount CASino::API => '/api'
   
   resources :sessions, only: [:index, :destroy]
@@ -9,7 +9,7 @@ CASino::Engine.routes.draw do
   post 'login' => 'sessions#create'
   get 'logout' => 'sessions#logout'
   post 'validate_otp' => 'sessions#validate_otp'
-  get  'custom_login' => 'sessions#custom_login'
+  post 'logout_api' => 'sessions#logout_api'
 
   resources :login_attempts, only: [:index]
 

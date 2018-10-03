@@ -67,6 +67,10 @@ class CASino::SessionsController < CASino::ApplicationController
     # redirect_to login_path(service: params[:destination])
   end
 
+  def logout_api
+    sign_out
+  end
+
   def validate_otp
     validation_result = validate_one_time_password(params[:otp], @ticket_granting_ticket.user.active_two_factor_authenticator)
     return flash.now[:error] = I18n.t('validate_otp.invalid_otp') unless validation_result.success?
