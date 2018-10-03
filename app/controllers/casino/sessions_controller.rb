@@ -58,7 +58,7 @@ class CASino::SessionsController < CASino::ApplicationController
     p params
     # if params[:service].present? && service_allowed?(params[:service])
     if params[:is_api]
-      render json: { status: 'failed', message: I18n.t('logout.logged_out_without_url') }
+      render json: { status: 'success', message: I18n.t('logout.logged_out_without_url') }
     else
       if params[:destination].present? && service_allowed?(params[:destination])
         p "in if condition"
