@@ -57,18 +57,18 @@ class CASino::SessionsController < CASino::ApplicationController
     p "params-->>>"
     p params
     # if params[:service].present? && service_allowed?(params[:service])
-    if params[:destination].present? && service_allowed?(params[:destination])
-      p "in if condition"
-      redirect_to params[:destination], status: :see_other 
+    if params[:is_api]
+      render json: { status: 'failed', message: I18n.t('logout.logged_out_without_url') }
     else
-      redirect_to login_path(service: params[:destination])
+      if params[:destination].present? && service_allowed?(params[:destination])
+        p "in if condition"
+        redirect_to params[:destination], status: :see_other 
+      else
+        redirect_to login_path(service: params[:destination])
+      end
     end
-    p "here"
+     p "here"
     # redirect_to login_path(service: params[:destination])
-  end
-
-  def logout_api
-    sign_out
   end
 
   def validate_otp

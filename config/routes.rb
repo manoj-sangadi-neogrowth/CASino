@@ -9,7 +9,6 @@ CASino::Engine.routes.draw do
   post 'login' => 'sessions#create'
   get 'logout' => 'sessions#logout'
   post 'validate_otp' => 'sessions#validate_otp'
-  post 'logout_api' => 'sessions#logout_api'
 
   resources :login_attempts, only: [:index]
 
