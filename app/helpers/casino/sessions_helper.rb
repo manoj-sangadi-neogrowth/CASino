@@ -17,14 +17,23 @@ module CASino::SessionsHelper
     end
   end
 
+  def current_ticket_granting_ticket_for_api
+    return nil unless params[:tgt]
+    return @current_ticket_granting_ticket unless @current_ticket_granting_ticket.nil?
+    find_valid_ticket_granting_ticket(params[:tgt], request.user_agent).tap do |tgt|
+      @current_ticket_granting_ticket = tgt
+    end
+  end
+
   def current_user
-    tgt = current_ticket_granting_ticket
+    tgt = params[:is_api] ? current_ticket_granting_ticket_for_api : current_ticket_granting_ticket
     return nil if tgt.nil?
     tgt.user
   end
 
   def ensure_signed_in
-    redirect_to login_path unless signed_in?
+      p params
+      redirect_to login_path unless signed_in? && params[:is_api]
   end
 
   def signed_in?

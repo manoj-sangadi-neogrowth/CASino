@@ -12,12 +12,13 @@ class CASino::SessionsController < CASino::ApplicationController
     @ticket_granting_tickets = current_user.ticket_granting_tickets.active
     @two_factor_authenticators = current_user.two_factor_authenticators.active
     @login_attempts = current_user.login_attempts.order(created_at: :desc).first(5)
+    p current_user
   end
 
   def new
-    tgt = current_ticket_granting_ticket
+    tgt = params[:is_api] ? current_ticket_granting_ticket_for_api : current_ticket_granting_ticket
     return handle_signed_in(tgt) unless params[:renew] || tgt.nil?
-    if params[:gateway] && params[:service].present?
+    if params[:gateway] && params[:service].present? && !params[:is_api]
       redirect_to(params[:service]) 
     end
   end
