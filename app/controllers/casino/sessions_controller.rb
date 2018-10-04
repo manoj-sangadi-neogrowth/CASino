@@ -9,10 +9,11 @@ class CASino::SessionsController < CASino::ApplicationController
   before_action :ensure_signed_in, only: [:index, :destroy]
 
   def index
+    p current_user
     @ticket_granting_tickets = current_user.ticket_granting_tickets.active
     @two_factor_authenticators = current_user.two_factor_authenticators.active
     @login_attempts = current_user.login_attempts.order(created_at: :desc).first(5)
-    p current_user
+    
   end
 
   def new
