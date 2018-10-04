@@ -32,8 +32,9 @@ module CASino::SessionsHelper
   end
 
   def ensure_signed_in
-      p params
-      redirect_to login_path unless signed_in? && params[:is_api]
+    if !params[:is_api]
+      redirect_to login_path unless signed_in?
+    end
   end
 
   def signed_in?
