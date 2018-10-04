@@ -78,9 +78,10 @@ module CASino::SessionsHelper
           rescue Addressable::URI::InvalidURIError => e
             Rails.logger.warn "Service #{params[:service]} not valid: #{e}"
           end
-        else
-          render json: { status: 'failed', message: 'Service params not present' }, status: 403 
+        # else
+          # render json: { status: 'failed', message: 'Service params not present' }, status: 403 
         end
+        render json: { status: 'success', message: tgt }
       else
         if params[:service].present?
           begin
