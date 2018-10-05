@@ -52,6 +52,8 @@ class CASino::SessionsController < CASino::ApplicationController
     @url = params[:url]
     Rails.logger.info "params-->>>"
     Rails.logger.info params
+    Rails.logger.info service_allowed?(params[:service])
+    Rails.logger.info params[:service].present?
     # if params[:service].present? && service_allowed?(params[:service])
     if params[:service].present? && service_allowed?(params[:service])
       Rails.logger.info "in if condition"
