@@ -16,8 +16,9 @@ class CASino::ServiceTicketsController < CASino::ApplicationController
   end
 
   def generate_service_ticket
-    st = acquire_service_ticket(params[:ticket], params[:service], options).service_with_ticket_url
-    render json: { status: 'success', message: st }
+    st = acquire_service_ticket(params[:ticket], params[:service], {})
+    sturl = st.service_with_ticket_url
+    render json: { status: 'success', message: st , url: sturl }
   end
   private
   def load_service_ticket
