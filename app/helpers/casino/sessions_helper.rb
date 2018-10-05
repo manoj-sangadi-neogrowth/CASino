@@ -56,13 +56,13 @@ module CASino::SessionsHelper
     end
   end
 
-  def sign_out
-    remove_ticket_granting_ticket(cookies[:tgt], request.user_agent)
+  def sign_out(tgt_ticket)
+    remove_ticket_granting_ticket(tgt_ticket, request.user_agent)
     cookies.delete :tgt
   end
 
   def sign_out_api
-    remove_ticket_granting_ticket(params[:tgt], request.user_agent)
+    )
   end
 
   def log_failed_login(username)
