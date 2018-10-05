@@ -47,19 +47,19 @@ class CASino::SessionsController < CASino::ApplicationController
   end
 
   def logout
-    p "in logout"
+    Rails.logger.info "in logout"
     sign_out
     @url = params[:url]
-    p "params-->>>"
-    p params
+    Rails.logger.info "params-->>>"
+    Rails.logger.info params
     # if params[:service].present? && service_allowed?(params[:service])
     if params[:service].present? && service_allowed?(params[:service])
-      p "in if condition"
+      Rails.logger.info "in if condition"
       redirect_to params[:service], status: :see_other 
     else
       redirect_to login_path(service: params[:destination])
     end
-    p "here"
+    Rails.logger.info "here"
     # redirect_to login_path(service: params[:destination])
   end
 
