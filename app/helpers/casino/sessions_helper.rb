@@ -61,10 +61,6 @@ module CASino::SessionsHelper
     cookies.delete :tgt
   end
 
-  def sign_out_api
-    )
-  end
-
   def log_failed_login(username)
     CASino::User.where(username: username).each do |user|
       create_login_attempt(user, false)
