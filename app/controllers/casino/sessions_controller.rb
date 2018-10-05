@@ -53,9 +53,9 @@ class CASino::SessionsController < CASino::ApplicationController
     p "params-->>>"
     p params
     # if params[:service].present? && service_allowed?(params[:service])
-    if params[:destination].present? && service_allowed?(params[:destination])
+    if params[:service].present? && service_allowed?(params[:service])
       p "in if condition"
-      redirect_to params[:destination], status: :see_other 
+      redirect_to params[:service], status: :see_other 
     else
       redirect_to login_path(service: params[:destination])
     end
