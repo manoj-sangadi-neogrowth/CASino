@@ -16,12 +16,11 @@ class CASino::ServiceTicketsController < CASino::ApplicationController
   end
 
   def generate_service_ticket
-    tgt= CASino::TicketGrantingTicket.find_by(ticket: params[:ticket])
-    p tgt
+    tgt= CASino::TicketGrantingTicket.find_by!(ticket: params[:ticket])
     st = acquire_service_ticket(tgt, params[:service], {})
-    p tgt
-    sturl = st.service_with_ticket_url
-    render json: { status: 'success', message: st , url: sturl }
+    render json: { status: 'success', message: st },status: :ok
+  rescue ActiveRecord::RecordNotFound 
+    render json: { status: 'failed', message:'Invalid Ticket'}, status: :bad_request
   end
   private
   def load_service_ticket
