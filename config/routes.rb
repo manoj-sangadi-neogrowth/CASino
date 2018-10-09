@@ -17,6 +17,7 @@ CASino::Engine.routes.draw do
   get 'validate' => 'service_tickets#validate'
   get 'serviceValidate' => 'service_tickets#service_validate'
   get 'generateServiceTicket' => 'service_tickets#generate_service_ticket'
+  get 'validatetgt' => 'service_tickets#validate_tgt'
   get 'proxyValidate' => 'proxy_tickets#proxy_validate'
   get 'proxy' => 'proxy_tickets#create'
 

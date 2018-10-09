@@ -53,15 +53,12 @@ class CASino::SessionsController < CASino::ApplicationController
   end
 
   def logout
-    p "in logout"
     ticket = params[:is_api].present? ? params[:tgt] : cookies[:tgt]
     sign_out(ticket)
     @url = params[:url]
-    p "params-->>>"
-    p params
     # if params[:service].present? && service_allowed?(params[:service])
     if params[:is_api]
-      render json: { status: 'success', message: I18n.t('logout.logged_out_without_url') }
+      render json: { status: 'success', message: I18n.t('logout.logged_out_without_url') },status: :ok
     elsif params[:destination].present? && service_allowed?(params[:destination])
       p "in if condition"
       redirect_to params[:destination], status: :see_other 

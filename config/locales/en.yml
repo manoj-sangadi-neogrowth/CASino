@@ -8,6 +8,10 @@ en:
     label_button: "Login"
     label_remember_me: "Stay logged in"
     notice: ""
+  tickets:
+    tgt_valid: "Ticket is valid"
+    tgt_invalid: "Ticket is Invalid"
+    service_invalid: "Service ticket is Invalid"
   service_not_allowed:
     title: "Service not allowed"
     message: "This SSO server is not configured to allow logins to \"%{service}\". If you think this is an error, please contact your administrator."
