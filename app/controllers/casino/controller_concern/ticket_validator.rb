@@ -27,4 +27,12 @@ module CASino::ControllerConcern::TicketValidator
                                        error_message: '"ticket" and "service" parameters are both required')
     end
   end
+
+  def ensure_ticket_parameters_present
+    if params[:ticket].nil?
+      build_ticket_validation_response(false,
+                                       error_code: 'INVALID_REQUEST',
+                                       error_message: '"ticket" parameter is required')
+    end
+  end
 end

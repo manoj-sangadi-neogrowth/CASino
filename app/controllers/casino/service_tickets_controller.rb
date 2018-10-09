@@ -2,7 +2,8 @@ class CASino::ServiceTicketsController < CASino::ApplicationController
   include CASino::ControllerConcern::TicketValidator
 
   before_action :load_service_ticket
-  before_action :ensure_service_ticket_parameters_present, only: [:service_validate,:generate_service_ticket,:validate_tgt]
+  before_action :ensure_service_ticket_parameters_present, only: [:service_validate,:generate_service_ticket]
+  before_action :ensure_ticket_parameters_present, only: [:validate_tgt]
 
   def validate
     if ticket_valid_for_service?(@service_ticket, params[:service], renew: params[:renew])
