@@ -76,7 +76,7 @@ module CASino::ServiceTicketProcessor
     if ticket.consumed?
       if options[:is_api]
         p "I am here"
-        true
+        ValidationResult.new
       else
         ValidationResult.new 'INVALID_TICKET', "Ticket '#{ticket.ticket}' already consumed", :warn
       end
