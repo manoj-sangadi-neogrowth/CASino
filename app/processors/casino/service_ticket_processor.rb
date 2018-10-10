@@ -54,7 +54,10 @@ module CASino::ServiceTicketProcessor
       result = ValidationResult.new 'INVALID_TICKET', 'Invalid validate request: Ticket does not exist', :warn
     else
       result = validate_existing_ticket_for_service(ticket, service, options)
+      p "result--->"
+      p result
       ticket.update_attribute(:consumed, true)
+      p "after consume"
       Rails.logger.debug "Consumed ticket '#{ticket.ticket}'"
     end
     if result.success?
@@ -69,7 +72,8 @@ module CASino::ServiceTicketProcessor
   def validate_existing_ticket_for_service(ticket, service, options = {})
     service = clean_service_url(service) if ticket.is_a?(CASino::ServiceTicket)
     if ticket.consumed?
-      if options[:is_api].present?
+      if options[:is_api]
+        p "I am here"
         ValidationResult.new
       else
         ValidationResult.new 'INVALID_TICKET', "Ticket '#{ticket.ticket}' already consumed", :warn
