@@ -70,6 +70,8 @@ module CASino::ServiceTicketProcessor
 
   private
   def validate_existing_ticket_for_service(ticket, service, options = {})
+    p "options"
+    p options
     service = clean_service_url(service) if ticket.is_a?(CASino::ServiceTicket)
     if ticket.consumed?
       if options[:is_api]

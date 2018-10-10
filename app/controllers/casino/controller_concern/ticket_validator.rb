@@ -4,7 +4,7 @@ module CASino::ControllerConcern::TicketValidator
   include CASino::ProxyGrantingTicketProcessor
 
   def validate_ticket(ticket)
-    validation_result = validate_ticket_for_service(ticket, params[:service], renew: params[:renew])
+    validation_result = validate_ticket_for_service(ticket, params[:service], renew: params[:renew], is_api: params[:is_api])
     if validation_result.success?
       options = { ticket: ticket }
       options[:proxy_granting_ticket] = acquire_proxy_granting_ticket(params[:pgtUrl], ticket) unless params[:pgtUrl].nil?
