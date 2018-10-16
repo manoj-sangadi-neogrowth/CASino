@@ -46,24 +46,41 @@ class CASino::SessionsController < CASino::ApplicationController
     redirect_to params[:service] || sessions_path
   end
 
+
   def logout
-    Rails.logger.info "in logout"
-    sign_out
+    ticket = params[:is_api].present? ? params[:ticket] : cookies[:tgt]
+    sign_out(ticket)
     @url = params[:url]
-    Rails.logger.info "params-->>>"
-    Rails.logger.info params
-    Rails.logger.info service_allowed?(params[:service])
-    Rails.logger.info params[:service].present?
     # if params[:service].present? && service_allowed?(params[:service])
-    if params[:service].present? && service_allowed?(params[:service])
-      Rails.logger.info "in if condition"
-      redirect_to params[:service], status: :see_other 
+    if params[:is_api]
+      render json: { status: 'success', message: I18n.t('logout.logged_out_without_url') },status: :ok
+    elsif params[:destination].present? && service_allowed?(params[:destination])
+      redirect_to params[:destination], status: :see_other 
     else
       redirect_to login_path(service: params[:destination])
     end
-    Rails.logger.info "here"
     # redirect_to login_path(service: params[:destination])
   end
+
+  # DONOT REMOVE KEPT FOR REFERENCE
+  # def logout
+  #   Rails.logger.info "in logout"
+  #   sign_out
+  #   @url = params[:url]
+  #   Rails.logger.info "params-->>>"
+  #   Rails.logger.info params
+  #   Rails.logger.info service_allowed?(params[:service])
+  #   Rails.logger.info params[:service].present?
+  #   # if params[:service].present? && service_allowed?(params[:service])
+  #   if params[:service].present? && service_allowed?(params[:service])
+  #     Rails.logger.info "in if condition"
+  #     redirect_to params[:service], status: :see_other 
+  #   else
+  #     redirect_to login_path(service: params[:destination])
+  #   end
+  #   Rails.logger.info "here"
+  #   # redirect_to login_path(service: params[:destination])
+  # end
 
   def validate_otp
     validation_result = validate_one_time_password(params[:otp], @ticket_granting_ticket.user.active_two_factor_authenticator)
