@@ -51,7 +51,7 @@ class CASino::SessionsController < CASino::ApplicationController
     Rails.logger.info "in logout----params"
     Rails.logger.info params
     ticket = params[:is_api].present? ? params[:ticket] : cookies[:tgt]
-    sign_out(ticket)
+    sign_out
     @url = params[:url]
     # if params[:service].present? && service_allowed?(params[:service])
     if params[:is_api]
