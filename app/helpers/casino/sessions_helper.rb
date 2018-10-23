@@ -111,8 +111,9 @@ module CASino::SessionsHelper
       if !service_allowed?(params[:service])
         render json: { status: 'failed', message: 'Service params not allowed' }, status: 403 
       else
-        # url = acquire_service_ticket(tgt, params[:service], options).service_with_ticket_url
-        render json: { status: 'success', message: acquire_service_ticket(tgt, params[:service], options), tgt: tgt }, status: :ok
+        url = acquire_service_ticket(tgt, params[:service], options).service_with_ticket_url
+        # render json: { status: 'success', message: acquire_service_ticket(tgt, params[:service], options), tgt: tgt }, status: :ok
+        render json: { status: 'success', location: url }, status: :ok
       end
     else
       if !service_allowed?(params[:service])
