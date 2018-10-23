@@ -17,6 +17,8 @@ class CASino::SessionsController < CASino::ApplicationController
   end
 
   def new
+    p "params"
+    p params
     tgt = params[:is_api] ? current_ticket_granting_ticket_for_api : current_ticket_granting_ticket
     return handle_signed_in(tgt) unless params[:renew] || tgt.nil?
     if params[:gateway] && params[:service].present? && !params[:is_api]
