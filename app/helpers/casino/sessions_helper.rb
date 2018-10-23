@@ -114,7 +114,7 @@ module CASino::SessionsHelper
         # url = acquire_service_ticket(tgt, params[:service], options).service_with_ticket_url
         # render json: { status: 'success', message: acquire_service_ticket(tgt, params[:service], options), tgt: tgt }, status: :ok
         # service_ticket = acquire_service_ticket(tgt, params[:service], options)
-        render json: { status: 'success', message: { tgt: tgt[:ticket],location: params[:host] + "/generateServiceTicket?ticket=" + tgt[:ticket]}}, status: :ok
+        render json: { status: 'success', location: params[:host] + "/generateServiceTicket?ticket=" + tgt[:ticket]}, status: :ok
       end
     else
       if !service_allowed?(params[:service])
