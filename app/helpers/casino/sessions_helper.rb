@@ -116,7 +116,7 @@ module CASino::SessionsHelper
         # service_ticket = acquire_service_ticket(tgt, params[:service], options)
         user_attributes = tgt.user.extra_attributes
         render json: { status: 'success',
-                       location1: params[:host] + '/generateServiceTicket?ticket=' + tgt[:ticket],
+                      # location: params[:host] + '/generateServiceTicket?ticket=' + tgt[:ticket],
                        user: user_attributes }, status: :ok
       end
     else
