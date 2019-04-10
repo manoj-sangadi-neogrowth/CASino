@@ -115,7 +115,7 @@ module CASino::SessionsHelper
     p params[:host]
     p "after params"
     p params
-    host = params[:host].present? ? params[:host] : (request.protocol + request.request.host_with_port)
+    host = params[:host].present? ? params[:host] : (request.protocol + request.host_with_port)
     p "host"
     p host
     if options[:is_api]
