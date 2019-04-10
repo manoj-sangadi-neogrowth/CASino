@@ -38,7 +38,7 @@ class CASino::SessionsController < CASino::ApplicationController
       p request.host
       p "hhhhh"
       p request.user_agent
-      sign_in(validation_result, long_term: params[:rememberMe], credentials_supplied: true, is_api: params[:is_api],host: request.host || params[:host],user_agent: request.user_agent)
+      sign_in(validation_result, long_term: params[:rememberMe], credentials_supplied: true, is_api: params[:is_api],host: request.host || params[:host], user_agent: request.user_agent)
     end
   end
 
