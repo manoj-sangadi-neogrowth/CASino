@@ -44,7 +44,9 @@ module CASino::SessionsHelper
   def sign_in(authentication_result, options = {})
     p "00000"
     p options
-    tgt = acquire_ticket_granting_ticket(authentication_result, options[:user_agent], remote_ip, options)
+    user_agent = options[:user_agent].present? ? options[:user_agent] : user_agent
+    remote_ip = options[:remote_ip].present? ? options[:remote_ip] : remote_ip
+    tgt = acquire_ticket_granting_ticket(authentication_result, user_agent, remote_ip, options)
     create_login_attempt(tgt.user, true)
     set_tgt_cookie(tgt)
     handle_signed_in(tgt, options)
