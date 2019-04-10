@@ -11,7 +11,7 @@ module CASino::SessionsHelper
   def current_ticket_granting_ticket
     return nil unless cookies[:tgt]
     return @current_ticket_granting_ticket unless @current_ticket_granting_ticket.nil?
-    find_valid_ticket_granting_ticket(cookies[:tgt], request.user_agent).tap do |tgt|
+    find_valid_ticket_granting_ticket(cookies[:tgt], user_agent).tap do |tgt|
       cookies.delete :tgt if tgt.nil?
       @current_ticket_granting_ticket = tgt
     end
@@ -20,7 +20,7 @@ module CASino::SessionsHelper
   def current_ticket_granting_ticket_for_api
     return nil unless params[:tgt]
     return @current_ticket_granting_ticket unless @current_ticket_granting_ticket.nil?
-    find_valid_ticket_granting_ticket(params[:tgt], request.user_agent).tap do |tgt|
+    find_valid_ticket_granting_ticket(params[:tgt], user_agent).tap do |tgt|
       @current_ticket_granting_ticket = tgt
     end
   end
@@ -42,7 +42,7 @@ module CASino::SessionsHelper
   end
 
   def sign_in(authentication_result, options = {})
-    tgt = acquire_ticket_granting_ticket(authentication_result, request.user_agent, request.remote_ip, options)
+    tgt = acquire_ticket_granting_ticket(authentication_result, user_agent, remote_ip, options)
     create_login_attempt(tgt.user, true)
     set_tgt_cookie(tgt)
     handle_signed_in(tgt, options)
@@ -57,7 +57,7 @@ module CASino::SessionsHelper
   end
 
   def sign_out(tgt_ticket)
-    remove_ticket_granting_ticket(tgt_ticket, request.user_agent)
+    remove_ticket_granting_ticket(tgt_ticket, user_agent)
     cookies.delete :tgt
   end
 
@@ -69,8 +69,8 @@ module CASino::SessionsHelper
 
   def create_login_attempt(user, successful)
     user.login_attempts.create! successful: successful,
-                                user_ip: request.ip,
-                                user_agent: request.user_agent
+                                user_ip: ip,
+                                user_agent: user_agent
   end
 
   private
