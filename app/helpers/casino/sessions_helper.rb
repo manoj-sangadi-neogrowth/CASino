@@ -115,6 +115,9 @@ module CASino::SessionsHelper
     p params[:host]
     p "after params"
     p params
+    host = params[:host].present? ? params[:host] : (request.protocol + request.host)
+    p "host"
+    p host
     if options[:is_api]
       if !service_allowed?(params[:service])
         render json: { status: 'failed', message: 'Service params not allowed' }, status: 403 
@@ -124,7 +127,7 @@ module CASino::SessionsHelper
         # service_ticket = acquire_service_ticket(tgt, params[:service], options)
         user_attributes = tgt.user.extra_attributes
         render json: { status: 'success',
-                       location: params[:host] + '/generateServiceTicket?ticket=' + tgt[:ticket],
+                       location: host + '/generateServiceTicket?ticket=' + tgt[:ticket],
                        user: user_attributes }, status: :ok
       end
     else
