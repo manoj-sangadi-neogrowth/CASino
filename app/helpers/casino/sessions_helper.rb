@@ -73,7 +73,7 @@ module CASino::SessionsHelper
 
   def create_login_attempt(user, successful)
     user.login_attempts.create! successful: successful,
-                                user_ip: ip,
+                                user_ip: request.remote_ip,
                                 user_agent: user_agent
   end
 
