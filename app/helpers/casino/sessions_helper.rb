@@ -107,6 +107,10 @@ module CASino::SessionsHelper
   end
 
   def handle_signed_in_with_service(tgt, options)
+    p "params"
+    p params[:host]
+    p "after params"
+    p params
     if options[:is_api]
       if !service_allowed?(params[:service])
         render json: { status: 'failed', message: 'Service params not allowed' }, status: 403 
