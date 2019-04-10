@@ -42,7 +42,7 @@ class CASino::SessionsController < CASino::ApplicationController
               credentials_supplied: true, is_api: params[:is_api],
               host: request.host || params[:host], 
               user_agent: request.user_agent,
-              remote_ip: request.ip )
+              remote_ip: request.remote_ip )
     end
   end
 
