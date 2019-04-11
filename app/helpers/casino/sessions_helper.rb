@@ -107,31 +107,12 @@ module CASino::SessionsHelper
   end
 
   def handle_signed_in_with_service(tgt, options)
-    p "params"
-    p params[:host]
-    p "after params"
-    p params
-    host = params[:host].present? ? params[:host] : (request.protocol + request.host_with_port)
-    p "host"
-    p host
     if options[:is_api]
       if !service_allowed?(params[:service])
         render json: { status: 'failed', message: 'Service params not allowed' }, status: 403 
       else
-        url = acquire_service_ticket(tgt, params[:service], options).service_with_ticket_url
-        p "url"
-        p url
-        # url = acquire_service_ticket(tgt, params[:service], options).service_with_ticket_url
-        # render json: { status: 'success', message: acquire_service_ticket(tgt, params[:service], options), tgt: tgt }, status: :ok
-        service_ticket = acquire_service_ticket(tgt, params[:service], options)
-        p "service_ticket"
-        p service_ticket
-        p "tgt"
-        p tgt
-        user_attributes = tgt.user
         render json: { status: 'success',
-                       url: url,
-                       user: user_attributes,
+                       url: acquire_service_ticket(tgt, params[:service], options).service_with_ticket_url,
                        tgt: tgt[:ticket] }, status: :ok
       end
     else

@@ -34,13 +34,8 @@ class CASino::SessionsController < CASino::ApplicationController
         show_login_error I18n.t('login_credential_acceptor.invalid_login_credentials') 
        end
     else
-      p "---?"
-      p request.host
-      p "hhhhh"
-      p request.user_agent
       sign_in(validation_result, long_term: params[:rememberMe], 
-              credentials_supplied: true, is_api: params[:is_api],
-              host: request.host || params[:host])
+              credentials_supplied: true, is_api: params[:is_api])
     end
   end
 
