@@ -42,11 +42,7 @@ module CASino::SessionsHelper
   end
 
   def sign_in(authentication_result, options = {})
-    p "00000"
-    p options
-    user_agent = options[:user_agent].present? ? options[:user_agent] : user_agent
-    remote_ip = options[:remote_ip].present? ? options[:remote_ip] : remote_ip
-    tgt = acquire_ticket_granting_ticket(authentication_result, user_agent, remote_ip, options)
+    tgt = acquire_ticket_granting_ticket(authentication_result, request.user_agent, request.remote_ip, options)
     create_login_attempt(tgt.user, true)
     set_tgt_cookie(tgt)
     handle_signed_in(tgt, options)
@@ -122,6 +118,9 @@ module CASino::SessionsHelper
       if !service_allowed?(params[:service])
         render json: { status: 'failed', message: 'Service params not allowed' }, status: 403 
       else
+        url = acquire_service_ticket(tgt, params[:service], options).service_with_ticket_url
+        p "url"
+        p url
         # url = acquire_service_ticket(tgt, params[:service], options).service_with_ticket_url
         # render json: { status: 'success', message: acquire_service_ticket(tgt, params[:service], options), tgt: tgt }, status: :ok
         # service_ticket = acquire_service_ticket(tgt, params[:service], options)
