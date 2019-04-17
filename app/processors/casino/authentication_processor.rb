@@ -15,10 +15,10 @@ module CASino::AuthenticationProcessor
       #   p "gggg"
       #   Rails.logger.error e
       #   return [nil,e]
-      # rescue Timeout::Error => e
-      #   p "fff"
-      #   Rails.logger.error e
-      #   return [nil,e]
+      rescue Timeout::Error => e
+        p "fff"
+        Rails.logger.error e
+        return [nil,e]
       end
       if data
         authentication_result = { authenticator: authenticator_name, user_data: data }
