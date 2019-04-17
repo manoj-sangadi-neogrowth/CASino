@@ -40,7 +40,7 @@ module CASino::AuthenticationProcessor
     @authenticators ||= {}.tap do |authenticators|
       CASino.config[:authenticators].each do |name, auth|
         next unless auth.is_a?(Hash)
-
+        p "authenticator"
         authenticator = if auth[:class]
                           auth[:class].constantize
                         else
@@ -54,10 +54,14 @@ module CASino::AuthenticationProcessor
 
   private
   def load_authenticator(name)
+    p "name"
+    p name
     gemname, classname = parse_name(name)
 
     begin
+      p "in begin"
       require gemname unless CASino.const_defined?(classname)
+      p CASino.const_get(classname)
       CASino.const_get(classname)
     rescue LoadError => error
       raise LoadError, load_error_message(name, gemname, error)
