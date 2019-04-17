@@ -25,6 +25,8 @@ class CASino::SessionsController < CASino::ApplicationController
 
   def create
     validation_result , error = validate_login_credentials(params[:username], params[:password])
+    p "validation_result"
+    p validation_result
     if !validation_result
       log_failed_login params[:username]
        if params[:is_api] 
