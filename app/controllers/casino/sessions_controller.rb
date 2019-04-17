@@ -26,14 +26,19 @@ class CASino::SessionsController < CASino::ApplicationController
 
   def create
     validation_result = validate_login_credentials(params[:username], params[:password])
+    p "---validation_result"
+    p validation_result
+    p !validation_result
     if !validation_result
       log_failed_login params[:username]
        if params[:is_api] 
+        p "gggg"
         render json: { status: 'failed', message: I18n.t('login_credential_acceptor.invalid_login_credentials')  }
        else 
         show_login_error I18n.t('login_credential_acceptor.invalid_login_credentials') 
        end
     else
+    p "dddd"
       sign_in(validation_result, long_term: params[:rememberMe], 
               credentials_supplied: true, is_api: params[:is_api])
     end
