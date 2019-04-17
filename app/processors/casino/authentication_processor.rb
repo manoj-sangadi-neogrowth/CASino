@@ -4,10 +4,15 @@ module CASino::AuthenticationProcessor
   extend ActiveSupport::Concern
 
   def validate_login_credentials(username, password)
+    p "1"
     authentication_result = nil
+    p "2"
     authenticators.each do |authenticator_name, authenticator|
+      p "3"
       begin
+        p "4"
         data = authenticator.validate(username, password)
+        p "5"
       rescue CASino::Authenticator::AuthenticatorError => e
         p "e"
         p e
