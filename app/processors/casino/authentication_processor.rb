@@ -11,9 +11,10 @@ module CASino::AuthenticationProcessor
       rescue CASino::Authenticator::AuthenticatorError => e
         Rails.logger.error "Authenticator '#{authenticator_name}' (#{authenticator.class}) raised an error: #{e}"
         return [nil,e]
-      rescue Exception => e
-        p "gggg"
-        return [nil,e]
+      # rescue Exception => e
+      #   p "gggg"
+      #   Rails.logger.error e
+      #   return [nil,e]
       rescue Timeout::Error => e
         p "fff"
         Rails.logger.error e
