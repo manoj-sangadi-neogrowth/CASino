@@ -8,12 +8,14 @@ module CASino::AuthenticationProcessor
     authenticators.each do |authenticator_name, authenticator|
       begin
         data = authenticator.validate(username, password)
-        p "data"
-        p data
       rescue CASino::Authenticator::AuthenticatorError => e
         Rails.logger.error "Authenticator '#{authenticator_name}' (#{authenticator.class}) raised an error: #{e}"
         return [nil,e]
-      rescue StandardError => e
+      rescue Exception => e
+        p "gggg"
+        return [nil,e]
+      rescue Timeout::Error => e
+        p "fff"
         Rails.logger.error e
         return [nil,e]
       end
