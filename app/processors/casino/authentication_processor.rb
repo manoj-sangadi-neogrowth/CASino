@@ -12,6 +12,7 @@ module CASino::AuthenticationProcessor
         Rails.logger.error "Authenticator '#{authenticator_name}' (#{authenticator.class}) raised an error: #{e}"
       rescue StandardError => e
         Rails.logger.error e
+        return [nil,e]
       end
       if data
         authentication_result = { authenticator: authenticator_name, user_data: data }
