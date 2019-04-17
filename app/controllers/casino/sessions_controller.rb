@@ -9,7 +9,6 @@ class CASino::SessionsController < CASino::ApplicationController
   before_action :ensure_signed_in, only: [:index, :destroy]
 
   def index
-    p current_user
     @ticket_granting_tickets = current_user.ticket_granting_tickets.active
     @two_factor_authenticators = current_user.two_factor_authenticators.active
     @login_attempts = current_user.login_attempts.order(created_at: :desc).first(5)
@@ -25,21 +24,15 @@ class CASino::SessionsController < CASino::ApplicationController
   end
 
   def create
-    p "dasasd"
     validation_result = validate_login_credentials(params[:username], params[:password])
-    p "---validation_result"
-    p validation_result
-    p !validation_result
     if !validation_result
       log_failed_login params[:username]
        if params[:is_api] 
-        p "gggg"
-        render json: { status: 'failed', message: I18n.t('login_credential_acceptor.invalid_login_credentials')  }
+        show_login_error_for_api I18n.t('login_credential_acceptor.invalid_login_credentials')
        else 
         show_login_error I18n.t('login_credential_acceptor.invalid_login_credentials') 
        end
     else
-    p "dddd"
       sign_in(validation_result, long_term: params[:rememberMe], 
               credentials_supplied: true, is_api: params[:is_api])
     end

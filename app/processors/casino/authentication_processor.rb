@@ -4,24 +4,13 @@ module CASino::AuthenticationProcessor
   extend ActiveSupport::Concern
 
   def validate_login_credentials(username, password)
-    p "1"
     authentication_result = nil
-    p "2"
     authenticators.each do |authenticator_name, authenticator|
-      p "3"
       begin
-        p "4"
-        p authenticator.validate(username, password)
         data = authenticator.validate(username, password)
-        p "5"
-        p 
       rescue CASino::Authenticator::AuthenticatorError => e
-        p "e"
-        p e
         Rails.logger.error "Authenticator '#{authenticator_name}' (#{authenticator.class}) raised an error: #{e}"
-        return false
       rescue StandardError => e
-        p "std err"
         Rails.logger.error e
       end
       if data
@@ -44,7 +33,6 @@ module CASino::AuthenticationProcessor
     @authenticators ||= {}.tap do |authenticators|
       CASino.config[:authenticators].each do |name, auth|
         next unless auth.is_a?(Hash)
-        p "authenticator"
         authenticator = if auth[:class]
                           auth[:class].constantize
                         else
@@ -58,14 +46,10 @@ module CASino::AuthenticationProcessor
 
   private
   def load_authenticator(name)
-    p "name"
-    p name
     gemname, classname = parse_name(name)
 
     begin
-      p "in begin"
       require gemname unless CASino.const_defined?(classname)
-      p CASino.const_get(classname)
       CASino.const_get(classname)
     rescue LoadError => error
       raise LoadError, load_error_message(name, gemname, error)
