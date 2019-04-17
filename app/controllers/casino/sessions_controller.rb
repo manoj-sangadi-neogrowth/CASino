@@ -28,7 +28,8 @@ class CASino::SessionsController < CASino::ApplicationController
     if !validation_result
       log_failed_login params[:username]
        if params[:is_api] 
-        render json: { status: 'failed', message: error.message } and return
+        render json: { status: "failed", message: error.message },status: :bad_request 
+        return
        else 
         show_login_error I18n.t('login_credential_acceptor.invalid_login_credentials') 
        end
@@ -57,7 +58,7 @@ class CASino::SessionsController < CASino::ApplicationController
     sign_out(ticket)
     @url = params[:url]
     if params[:is_api]
-      render json: { status: 'success', message: I18n.t('logout.logged_out_without_url') },status: :ok
+      render json: { status: "success", message: I18n.t('logout.logged_out_without_url') },status: :ok
     elsif params[:service].present? && service_allowed?(params[:service])
       redirect_to params[:service], status: :see_other 
     else
@@ -75,10 +76,6 @@ class CASino::SessionsController < CASino::ApplicationController
   end
 
   private
-
-  def show_login_error_for_api(message)
-    render json: { status: 'failed', message: message } and return
-  end
 
   def show_login_error(message)
     flash.now[:error] = message
