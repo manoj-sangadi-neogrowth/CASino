@@ -3,13 +3,16 @@ require 'casino/authenticator'
 module CASino::AuthenticationProcessor
   extend ActiveSupport::Concern
 
-  def validate_login_credentials(username, password)
+  def validate_login_credentials(username, password, is_api: false)
     authentication_result = nil
     authenticators.each do |authenticator_name, authenticator|
       begin
         data = authenticator.validate(username, password)
       rescue CASino::Authenticator::AuthenticatorError => e
+        p "e"
+        p e
         Rails.logger.error "Authenticator '#{authenticator_name}' (#{authenticator.class}) raised an error: #{e}"
+        return false
       end
       if data
         authentication_result = { authenticator: authenticator_name, user_data: data }
