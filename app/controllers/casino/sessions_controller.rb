@@ -26,7 +26,7 @@ class CASino::SessionsController < CASino::ApplicationController
 
   def create
     p "dasasd"
-    validation_result = validate_login_credentials(params[:username], params[:password],params[:is_api])
+    validation_result = validate_login_credentials(params[:username], params[:password]])
     p "---validation_result"
     p validation_result
     p !validation_result

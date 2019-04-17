@@ -3,7 +3,7 @@ require 'casino/authenticator'
 module CASino::AuthenticationProcessor
   extend ActiveSupport::Concern
 
-  def validate_login_credentials(username, password, is_api: false)
+  def validate_login_credentials(username, password)
     authentication_result = nil
     authenticators.each do |authenticator_name, authenticator|
       begin
