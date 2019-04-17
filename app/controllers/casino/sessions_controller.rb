@@ -24,15 +24,11 @@ class CASino::SessionsController < CASino::ApplicationController
   end
 
   def create
-    validation_result , message = validate_login_credentials(params[:username], params[:password])
-    p "00"
-    p validation_result 
-    p message.message
+    validation_result , error = validate_login_credentials(params[:username], params[:password])
     if !validation_result
       log_failed_login params[:username]
        if params[:is_api] 
-        show_login_error_for_api message
-        # show_login_error_for_api I18n.t('login_credential_acceptor.invalid_login_credentials')
+        render json: { status: 'failed', message: error.message } and return
        else 
         show_login_error I18n.t('login_credential_acceptor.invalid_login_credentials') 
        end
