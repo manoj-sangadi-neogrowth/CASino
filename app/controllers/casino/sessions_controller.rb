@@ -27,7 +27,7 @@ class CASino::SessionsController < CASino::ApplicationController
     validation_result , message = validate_login_credentials(params[:username], params[:password])
     p "00"
     p validation_result 
-    p message
+    p message.message
     if !validation_result
       log_failed_login params[:username]
        if params[:is_api] 
