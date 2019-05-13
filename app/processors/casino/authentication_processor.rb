@@ -9,17 +9,13 @@ module CASino::AuthenticationProcessor
     authenticators.each do |authenticator_name, authenticator|
       begin
         data = authenticator.validate(username, password)
-        p "00000"
-        p data
       rescue CASino::Authenticator::AuthenticatorError => e
-        p "ggg"
         message = e.message || "Casino Authenticator raised an error"
         Rails.logger.error "Authenticator '#{authenticator_name}' (#{authenticator.class}) raised an error: #{e}"
         return [nil,message]
       rescue Exception => e
-        p "kkkk"
         message = e.message || "Something went wrong!"
-        Rails.logger.error e
+        Rails.logger.error "Authenticator '#{authenticator_name}' (#{authenticator.class}) raised an exception: #{e}"
         return [nil,message]
       end
       if data
@@ -28,12 +24,6 @@ module CASino::AuthenticationProcessor
         break
       end
     end
-    p "fff"
-    p "authentication_result"
-    p  authentication_result
-    p "jjjj"
-    p "message"
-    p message
     [authentication_result, message]
   end
 
