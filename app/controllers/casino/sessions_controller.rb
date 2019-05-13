@@ -28,7 +28,7 @@ class CASino::SessionsController < CASino::ApplicationController
     if !validation_result
       log_failed_login params[:username]
        if params[:is_api] 
-        render json: { status: "failed", message: error.message },status: :bad_request 
+        render json: { status: "failed", message: error },status: :bad_request 
         return
        else 
         show_login_error I18n.t('login_credential_acceptor.invalid_login_credentials') 
