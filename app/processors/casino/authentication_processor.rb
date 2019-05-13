@@ -20,7 +20,9 @@ module CASino::AuthenticationProcessor
       rescue Exception => e
         p "kkkk"
         p e
-        message = e
+        p e.error
+        p e.message
+        message = e || "Something went wrong!"
         Rails.logger.error e
         return [nil,message]
       end
