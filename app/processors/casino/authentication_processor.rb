@@ -13,15 +13,12 @@ module CASino::AuthenticationProcessor
         p data
       rescue CASino::Authenticator::AuthenticatorError => e
         p "ggg"
-        p e
-        message = e
+        message = e.message || "Casino Authenticator raised an error"
         Rails.logger.error "Authenticator '#{authenticator_name}' (#{authenticator.class}) raised an error: #{e}"
         return [nil,message]
       rescue Exception => e
         p "kkkk"
-        p e
-        p e.message
-        message = e || "Something went wrong!"
+        message = e.message || "Something went wrong!"
         Rails.logger.error e
         return [nil,message]
       end
