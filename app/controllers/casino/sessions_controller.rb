@@ -31,8 +31,6 @@ class CASino::SessionsController < CASino::ApplicationController
         render json: { status: "failed", message: error },status: :bad_request 
         return
        else 
-        p "mess----"
-        p error
         if error.present?
           show_login_error error
         else
