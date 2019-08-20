@@ -31,6 +31,8 @@ class CASino::SessionsController < CASino::ApplicationController
         render json: { status: "failed", message: error },status: :bad_request 
         return
        else 
+        p "mess----"
+        p error
         show_login_error I18n.t('login_credential_acceptor.invalid_login_credentials') 
        end
     else
