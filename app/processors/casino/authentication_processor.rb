@@ -9,7 +9,7 @@ module CASino::AuthenticationProcessor
     authenticators.each do |authenticator_name, authenticator|
       begin
         data = authenticator.validate(username, password)
-        can_login , message =  authenticator.can_login?(username)
+        can_login , message =  authenticator.can_login?(username) if data.present?
       rescue CASino::Authenticator::AuthenticatorError => e
         message = e.message || "Casino Authenticator raised an error"
         Rails.logger.error "Authenticator '#{authenticator_name}' (#{authenticator.class}) raised an error: #{e}"
@@ -23,11 +23,8 @@ module CASino::AuthenticationProcessor
         if can_login
           authentication_result = { authenticator: authenticator_name, user_data: data }
           Rails.logger.info("Credentials for username '#{data[:username]}' successfully validated using authenticator '#{authenticator_name}' (#{authenticator.class})")
-          break
-        else
-          authentication_result = nil
-          break
         end
+       break
       end
     end
     [authentication_result, message]
