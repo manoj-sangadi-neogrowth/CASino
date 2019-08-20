@@ -33,7 +33,11 @@ class CASino::SessionsController < CASino::ApplicationController
        else 
         p "mess----"
         p error
-        show_login_error I18n.t('login_credential_acceptor.invalid_login_credentials') 
+        if error.present?
+          show_login_error error
+        else
+          show_login_error I18n.t('login_credential_acceptor.invalid_login_credentials') 
+        end
        end
     else
       sign_in(validation_result, long_term: params[:rememberMe], 
