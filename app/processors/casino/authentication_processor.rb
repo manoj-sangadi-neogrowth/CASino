@@ -20,10 +20,10 @@ module CASino::AuthenticationProcessor
         return [nil,message]
       end
       if data
-        # if can_login
-        authentication_result = { authenticator: authenticator_name, user_data: data }
-        Rails.logger.info("Credentials for username '#{data[:username]}' successfully validated using authenticator '#{authenticator_name}' (#{authenticator.class})")
-        # end
+        if can_login
+          authentication_result = { authenticator: authenticator_name, user_data: data }
+          Rails.logger.info("Credentials for username '#{data[:username]}' successfully validated using authenticator '#{authenticator_name}' (#{authenticator.class})")
+        end
        break
       end
     end
