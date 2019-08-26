@@ -25,14 +25,14 @@ class CASino::SessionsController < CASino::ApplicationController
 
   def create
     validation_result , error = validate_login_credentials(params[:username], params[:password])
+    p "#######"
+    p error
     if !validation_result
       log_failed_login params[:username]
        if params[:is_api] 
         render json: { status: "failed", message: error },status: :bad_request 
         return
        else 
-        p "#######"
-        p error
         if error.present?
           show_login_error error
         else
