@@ -37,7 +37,7 @@ class CASino::SessionsController < CASino::ApplicationController
         if error.present?
           show_login_error error
         else
-          Rails.logger.info "llll"
+          p "llll"
           show_login_error I18n.t('login_credential_acceptor.invalid_login_credentials') 
         end
        end
