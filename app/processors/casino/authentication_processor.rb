@@ -11,6 +11,8 @@ module CASino::AuthenticationProcessor
         data = authenticator.validate(username, password)
         can_login , message =  authenticator.can_login?(username) if data.present?
         p "--->"
+        p data
+        p data.present?
         p can_login
         p message
       rescue CASino::Authenticator::AuthenticatorError => e
