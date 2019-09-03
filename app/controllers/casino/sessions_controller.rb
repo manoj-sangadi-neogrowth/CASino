@@ -24,20 +24,17 @@ class CASino::SessionsController < CASino::ApplicationController
   end
 
   def create
-    Rails.logger.info "hhhhhh"
     validation_result , error = validate_login_credentials(params[:username], params[:password])
-    Rails.logger.info "#######"
-    Rails.logger.info error
     if !validation_result
       log_failed_login params[:username]
        if params[:is_api] 
-        render json: { status: "failed", message: error },status: :bad_request 
+        error_msg = error.present? ? error : I18n.t('login_credential_acceptor.invalid_login_credentials')
+        render json: { status: "failed", message: error_msg },status: :bad_request 
         return
        else 
         if error.present?
           show_login_error error
         else
-          p "llll"
           show_login_error I18n.t('login_credential_acceptor.invalid_login_credentials') 
         end
        end
