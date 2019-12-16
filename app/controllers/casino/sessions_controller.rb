@@ -29,7 +29,7 @@ class CASino::SessionsController < CASino::ApplicationController
   def create
     p "create"
     p params[:username]
-    p params[:username].strip
+    params[:username] = params[:username].strip
     validation_result , error = validate_login_credentials(params[:username], params[:password])
     if !validation_result
       log_failed_login params[:username]
