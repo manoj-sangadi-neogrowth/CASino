@@ -7,6 +7,7 @@ class CASino::SessionsController < CASino::ApplicationController
   before_action :ensure_service_allowed, only: [:new, :create]
   before_action :load_ticket_granting_ticket_from_parameter, only: [:validate_otp]
   before_action :ensure_signed_in, only: [:index, :destroy]
+  before_action :trim_space, only: [:new, :create]
 
   def index
     @ticket_granting_tickets = current_user.ticket_granting_tickets.active
@@ -136,5 +137,12 @@ class CASino::SessionsController < CASino::ApplicationController
   def redirect_to_login
     redirect_to login_path(service: params[:service])
     #redirect_to login_path
+  end
+
+  def trim_space
+    p "llllll"
+    p  params[:username].strip
+    params[:username] =  params[:username].strip if params[:username].present?
+    params[:username]
   end
 end
