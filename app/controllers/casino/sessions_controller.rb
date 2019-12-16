@@ -7,7 +7,6 @@ class CASino::SessionsController < CASino::ApplicationController
   before_action :ensure_service_allowed, only: [:new, :create]
   before_action :load_ticket_granting_ticket_from_parameter, only: [:validate_otp]
   before_action :ensure_signed_in, only: [:index, :destroy]
-  # before_action :trim_space, only: [:new, :create]
 
   def index
     @ticket_granting_tickets = current_user.ticket_granting_tickets.active
@@ -17,8 +16,6 @@ class CASino::SessionsController < CASino::ApplicationController
   end
 
   def new
-    p "new"
-    p params[:username]
     tgt = params[:is_api] ? current_ticket_granting_ticket_for_api : current_ticket_granting_ticket
     return handle_signed_in(tgt) unless params[:renew] || tgt.nil?
     if params[:gateway] && params[:service].present? && !params[:is_api]
@@ -27,9 +24,7 @@ class CASino::SessionsController < CASino::ApplicationController
   end
 
   def create
-    p "create"
-    p params[:username]
-    params[:username] = params[:username].strip
+    params[:username] = params[:username].strip if params[:username].present?
     validation_result , error = validate_login_credentials(params[:username], params[:password])
     if !validation_result
       log_failed_login params[:username]
@@ -142,11 +137,5 @@ class CASino::SessionsController < CASino::ApplicationController
   def redirect_to_login
     redirect_to login_path(service: params[:service])
     #redirect_to login_path
-  end
-
-  def trim_space
-    p "llllll"
-    params[:username] =  params[:username].strip if params[:username].present?
-    params[:username]
   end
 end
