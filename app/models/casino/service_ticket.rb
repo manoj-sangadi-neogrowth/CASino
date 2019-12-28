@@ -43,6 +43,9 @@ class CASino::ServiceTicket < ActiveRecord::Base
 
   private
   def send_single_sign_out_notification
+    
+    binding.pry
+    
     notifier = SingleSignOutNotifier.new(self)
     notifier.notify
     true
