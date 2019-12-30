@@ -4,7 +4,6 @@ module CASino::ProxyGrantingTicketProcessor
   extend ActiveSupport::Concern
 
   def acquire_proxy_granting_ticket(pgt_url, service_ticket)
-    binding.pry
     callback_uri = Addressable::URI.parse(pgt_url)
     if callback_uri.scheme != 'https'
       Rails.logger.warn "Proxy tickets can only be granted to callback servers using HTTPS."
