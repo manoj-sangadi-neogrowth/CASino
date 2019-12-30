@@ -20,6 +20,9 @@ module CASino::ProxyGrantingTicketProcessor
     })
     return unless pgt.valid?
     callback_uri.query_values = (callback_uri.query_values || {}).merge(pgtId: pgt.ticket, pgtIou: pgt.iou)
+    
+    binding.pry
+    
     response = Faraday.get "#{callback_uri}"
     # TODO: does this follow redirects? CAS specification says that redirects MAY be followed (2.5.4)
     if response.success?

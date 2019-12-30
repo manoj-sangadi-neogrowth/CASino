@@ -28,11 +28,9 @@ class CASino::ServiceTicket::SingleSignOutNotifier
   def send_notification(url, xml)
 
     Rails.logger.info "Sending Single Sign Out notification for ticket '#{@service_ticket.ticket}'"
-    binding.pry
-
     result = Faraday.post(url, logoutRequest: xml) do |request|
-      request.options[:timeout] = CASino.config.service_ticket[:single_sign_out_notification][:timeout]
-    end
+                request.options[:timeout] = CASino.config.service_ticket[:single_sign_out_notification][:timeout]
+             end
     if result.success?
       Rails.logger.info "Logout notification successfully posted to #{url}."
       true
