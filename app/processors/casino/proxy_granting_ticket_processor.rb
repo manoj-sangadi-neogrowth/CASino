@@ -4,6 +4,7 @@ module CASino::ProxyGrantingTicketProcessor
   extend ActiveSupport::Concern
 
   def acquire_proxy_granting_ticket(pgt_url, service_ticket)
+    binding.pry
     callback_uri = Addressable::URI.parse(pgt_url)
     if callback_uri.scheme != 'https'
       Rails.logger.warn "Proxy tickets can only be granted to callback servers using HTTPS."
@@ -20,9 +21,6 @@ module CASino::ProxyGrantingTicketProcessor
     })
     return unless pgt.valid?
     callback_uri.query_values = (callback_uri.query_values || {}).merge(pgtId: pgt.ticket, pgtIou: pgt.iou)
-    
-    binding.pry
-    
     response = Faraday.get "#{callback_uri}"
     # TODO: does this follow redirects? CAS specification says that redirects MAY be followed (2.5.4)
     if response.success?
