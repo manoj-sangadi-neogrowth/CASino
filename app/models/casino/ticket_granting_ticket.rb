@@ -11,7 +11,7 @@ class CASino::TicketGrantingTicket < ActiveRecord::Base
 
   scope :active, -> { where(awaiting_two_factor_authentication: false).order('updated_at DESC') }
 
-  def self.cleanup(user = nil)
+  def self.cleanup(user = nil,options)
     if user.nil?
       base = self
     else
@@ -25,6 +25,9 @@ class CASino::TicketGrantingTicket < ActiveRecord::Base
       false,
       CASino.config.ticket_granting_ticket[:lifetime_long_term].seconds.ago
     ])
+    
+    binding.pry
+    
     CASino::ServiceTicket.where(ticket_granting_ticket_id: tgts).destroy_all
     tgts.destroy_all
   end
