@@ -25,15 +25,11 @@ class CASino::TicketGrantingTicket < ActiveRecord::Base
       false,
       CASino.config.ticket_granting_ticket[:lifetime_long_term].seconds.ago
     ])
-    
-    binding.pry
-    
     if options[:is_api].present?
       CASino::ServiceTicket.where(ticket_granting_ticket_id: tgts).delete_all
     else
       CASino::ServiceTicket.where(ticket_granting_ticket_id: tgts).destroy_all
     end
-
     tgts.destroy_all
   end
 
