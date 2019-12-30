@@ -28,7 +28,12 @@ class CASino::TicketGrantingTicket < ActiveRecord::Base
     
     binding.pry
     
-    CASino::ServiceTicket.where(ticket_granting_ticket_id: tgts).destroy_all
+    if options[:is_api].present?
+      CASino::ServiceTicket.where(ticket_granting_ticket_id: tgts).delete_all
+    else
+      CASino::ServiceTicket.where(ticket_granting_ticket_id: tgts).destroy_all
+    end
+
     tgts.destroy_all
   end
 
