@@ -19,7 +19,7 @@ class CASino::ServiceTicketsController < CASino::ApplicationController
   def generate_service_ticket
     tgt= CASino::TicketGrantingTicket.find_by!(ticket: params[:ticket])
     st = acquire_service_ticket(tgt, params[:service], {})
-    render json: { status: 'success', message: st },status: :ok
+    render json: { status: 'success', message: st&.ticket },status: :ok
   rescue ActiveRecord::RecordNotFound 
     render json: { status: 'failed', message: I18n.t('tickets.service_invalid')}, status: :bad_request
   end
