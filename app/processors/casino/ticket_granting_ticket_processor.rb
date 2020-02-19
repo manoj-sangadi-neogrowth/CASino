@@ -20,7 +20,7 @@ module CASino::TicketGrantingTicketProcessor
         tgt
       else
         Rails.logger.info 'User-Agent changed: ticket-granting ticket not valid for this browser'
-        nil
+        tgt
       end
     end
   end
