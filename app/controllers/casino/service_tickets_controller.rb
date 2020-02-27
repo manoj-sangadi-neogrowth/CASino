@@ -26,7 +26,8 @@ class CASino::ServiceTicketsController < CASino::ApplicationController
 
   def validate_tgt
     tgt= CASino::TicketGrantingTicket.find_by!(ticket: params[:ticket])
-    render json: { status: 'success', message: I18n.t('tickets.tgt_valid') },status: :ok
+    user = tgt.user.extra_attributes
+    render json: { status: 'success', message: I18n.t('tickets.tgt_valid'), user: user },status: :ok
   rescue ActiveRecord::RecordNotFound 
     render json: { status: 'failed', message: I18n.t('tickets.tgt_invalid') }, status: :bad_request
   end
