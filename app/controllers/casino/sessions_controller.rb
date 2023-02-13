@@ -27,6 +27,7 @@ class CASino::SessionsController < CASino::ApplicationController
   def create
     if params["g-recaptcha-response"].blank?    
       show_login_error("Please Verify Recaptcha")
+      return
     end
     body = {
       "response" => params["g-recaptcha-response"],
@@ -53,8 +54,9 @@ class CASino::SessionsController < CASino::ApplicationController
         sign_in(validation_result, long_term: params[:rememberMe], credentials_supplied: true, is_api: params[:is_api],host: params[:host])
       else
         show_login_error("Please Verify Recaptcha") 
+        return
       end
-      sign_in(validation_result, long_term: params[:rememberMe], credentials_supplied: true, is_api: params[:is_api],host: params[:host])
+      # sign_in(validation_result, long_term: params[:rememberMe], credentials_supplied: true, is_api: params[:is_api],host: params[:host])
     end
   end
 
