@@ -27,7 +27,7 @@ module CASino::AuthenticationProcessor
     authenticator.load_user_data(username)
   end
 
-  def authenticators
+  def self.authenticators
     @authenticators ||= {}.tap do |authenticators|
       CASino.config[:authenticators].each do |name, auth|
         next unless auth.is_a?(Hash)
@@ -44,7 +44,7 @@ module CASino::AuthenticationProcessor
   end
 
   private
-  def load_authenticator(name)
+  def self.load_authenticator(name)
     gemname, classname = parse_name(name)
 
     begin
@@ -61,13 +61,13 @@ module CASino::AuthenticationProcessor
     [ "casino-#{name.underscore}_authenticator", "#{name.camelize}Authenticator" ]
   end
 
-  def load_error_message(name, gemname, error)
+  def self.load_error_message(name, gemname, error)
     "Failed to load authenticator '#{name}'. Maybe you have to include " \
       "\"gem '#{gemname}'\" in your Gemfile?\n" \
       "  Error: #{error.message}\n"
   end
 
-  def name_error_message(name, error)
+  def self.name_error_message(name, error)
     "Failed to load authenticator '#{name}'. The authenticator class must " \
       "be defined in the CASino namespace.\n" \
       "  Error: #{error.message}\n"
