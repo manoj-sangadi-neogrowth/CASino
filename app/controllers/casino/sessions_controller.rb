@@ -26,7 +26,9 @@ class CASino::SessionsController < CASino::ApplicationController
 
   def create
     if params["g-recaptcha-response"].blank?    
-      show_login_error("Please Verify Recaptcha")
+      # show_login_error("Please Verify Recaptcha")
+      flash.now[:error] = "Please Verify Recaptcha"
+      render :new
       return
     end
     body = {
@@ -37,7 +39,8 @@ class CASino::SessionsController < CASino::ApplicationController
     begin    
       response = HTTParty.post(captcha_url, :body => body)
     rescue 
-      show_login_error("Something went wrong")
+      flash.now[:error] = "Something went wrong"
+      render :new
       return
     end
     validation_result = validate_login_credentials(params[:username], params[:password])
