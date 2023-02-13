@@ -44,7 +44,7 @@ module CASino::AuthenticationProcessor
                         else
                           load_authenticator(auth[:authenticator])
                         end
-                        Rails.logger.info("authenticators[name] - #{authenticators[name] = authenticator.new(auth[:options])}")
+                        Rails.logger.info("authenticators[name] - #{authenticators[name] = authenticator.new(auth[:options]).inspect}")
         authenticators[name] = authenticator.new(auth[:options])
       end
     end
