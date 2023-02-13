@@ -25,21 +25,21 @@ class CASino::SessionsController < CASino::ApplicationController
   end
 
   def create
-    if params["g-recaptcha-response"].blank?    
-      show_login_error("Please Verify Recaptcha")
-      return
-    end
-    body = {
-      "response" => params["g-recaptcha-response"],
-      "secret" => ENV['RECAPTCHA_SECRET_KEY']
-    }
-    captcha_url = "https://www.google.com/recaptcha/api/siteverify"
-    begin    
-      response = HTTParty.post(captcha_url, :body => body)
-    rescue 
-      show_login_error("Something went wrong")
-      return
-    end
+    # if params["g-recaptcha-response"].blank?    
+    #   show_login_error("Please Verify Recaptcha")
+    #   return
+    # end
+    # body = {
+    #   "response" => params["g-recaptcha-response"],
+    #   "secret" => ENV['RECAPTCHA_SECRET_KEY']
+    # }
+    # captcha_url = "https://www.google.com/recaptcha/api/siteverify"
+    # begin    
+    #   response = HTTParty.post(captcha_url, :body => body)
+    # rescue 
+    #   show_login_error("Something went wrong")
+    #   return
+    # end
     validation_result = validate_login_credentials(params[:username], params[:password])
     Rails.logger.info("!!!!!!!! validation result:- #{validation_result}")
     if !validation_result
@@ -50,13 +50,13 @@ class CASino::SessionsController < CASino::ApplicationController
         show_login_error I18n.t('login_credential_acceptor.invalid_login_credentials') 
        end
     else
-      if response["success"] == true
-        sign_in(validation_result, long_term: params[:rememberMe], credentials_supplied: true, is_api: params[:is_api],host: params[:host])
-      else
-        show_login_error("Please Verify Recaptcha") 
-        return
-      end
-      # sign_in(validation_result, long_term: params[:rememberMe], credentials_supplied: true, is_api: params[:is_api],host: params[:host])
+      # if response["success"] == true
+      #   sign_in(validation_result, long_term: params[:rememberMe], credentials_supplied: true, is_api: params[:is_api],host: params[:host])
+      # else
+      #   show_login_error("Please Verify Recaptcha") 
+      #   return
+      # end
+      sign_in(validation_result, long_term: params[:rememberMe], credentials_supplied: true, is_api: params[:is_api],host: params[:host])
     end
   end
 
