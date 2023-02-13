@@ -18,6 +18,7 @@ module CASino::AuthenticationProcessor
         break
       end
     end
+    Rails.logger.info(" ****** authentication_result: - #{authentication_result}")
     authentication_result
   end
 
