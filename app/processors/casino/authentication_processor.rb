@@ -6,6 +6,7 @@ module CASino::AuthenticationProcessor
 
   def validate_login_credentials(username, password)
     Rails.logger.info("@@@@ inside of CASino::AuthenticationProcessor validate_login_credentials")
+    Rails.logger.info("@@@@ username:- #{username}, @@@@ password:- #{password}")
     authentication_result = nil
     authenticators.each do |authenticator_name, authenticator|
       Rails.logger.info("@@@@ authenticator_name- #{authenticator_name}, authenticator:- #{authenticator.inspect} ")
