@@ -3,7 +3,16 @@ require 'casino/authenticator'
 module CASino::Authenticators
   extend ActiveSupport::Concern
 
+  def load_user_data(authenticator_name, username)
+    authenticator = authenticators[authenticator_name]
+    return nil if authenticator.nil?
+    return nil unless authenticator.respond_to?(:load_user_data)
+    authenticator.load_user_data(username)
+  end
+
+  Rails.logger.info("@@@@ inside of CASino::Authenticators   ^^^")
   def self.authenticators
+    Rails.logger.info("@@@@ inside of CASino::Authenticators  method")
     @authenticators ||= {}.tap do |authenticators|
       CASino.config[:authenticators].each do |name, auth|
         next unless auth.is_a?(Hash)

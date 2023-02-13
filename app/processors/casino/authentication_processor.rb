@@ -4,6 +4,7 @@ module CASino::AuthenticationProcessor
   extend ActiveSupport::Concern
 
   def self.validate_login_credentials(username, password)
+    Rails.logger.info("@@@@ inside of CASino::AuthenticationProcessor validate_login_credentials")
     authentication_result = nil
     CASino::Authenticators.authenticators.each do |authenticator_name, authenticator|
       begin
