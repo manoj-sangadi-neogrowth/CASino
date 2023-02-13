@@ -5,7 +5,6 @@ module CASino::AuthenticationProcessor
   extend self
 
   def validate_login_credentials(username, password)
-    Rails.logger.info("@@@@ inside of CASino::AuthenticationProcessor validate_login_credentials")
     authentication_result = nil
     authenticators.each do |authenticator_name, authenticator|
       begin
@@ -30,7 +29,6 @@ module CASino::AuthenticationProcessor
   end
 
   def authenticators
-    Rails.logger.info("@@@@ inside of Authenticators  method")
     @authenticators ||= {}.tap do |authenticators|
       CASino.config[:authenticators].each do |name, auth|
         next unless auth.is_a?(Hash)
