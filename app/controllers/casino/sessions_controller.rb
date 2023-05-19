@@ -25,7 +25,6 @@ class CASino::SessionsController < CASino::ApplicationController
   end
 
   def create
-    Rails.logger.info("#{params[:service]}")
     if params[:service] == "/api/v1/customer_app/login"
       Rails.logger.info("@@@@@*** Inside IF block")
       validate_login
@@ -96,6 +95,7 @@ class CASino::SessionsController < CASino::ApplicationController
   end
 
   def validate_login
+    Rails.logger.info("$$$$$$$$ #{params[:service], params[:is_api]} $$$$$$$")
     validation_result = validate_login_credentials(params[:username], params[:password])
     if !validation_result
       log_failed_login params[:username]
