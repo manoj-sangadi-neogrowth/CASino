@@ -25,10 +25,12 @@ class CASino::SessionsController < CASino::ApplicationController
   end
 
   def create
-    Rails.logger.info "!!!!!#{params["service"]}"
-    if params["service"] == "/api/v1/customer_app/login"
+    Rails.logger.info("#{params[:service]}")
+    if params[:service] == "/api/v1/customer_app/login"
+      Rails.logger.info("@@@@@*** Inside IF block")
       validate_login
     else
+      Rails.logger.info("!!!!! Inside ELSE block")
       if params["g-recaptcha-response"].blank? 
         # show_login_error("Please Verify Recaptcha")
         flash.now[:error] = "Please Verify Recaptcha"
@@ -93,8 +95,6 @@ class CASino::SessionsController < CASino::ApplicationController
     handle_signed_in(@ticket_granting_ticket)
   end
 
-  private
-
   def validate_login
     validation_result = validate_login_credentials(params[:username], params[:password])
     if !validation_result
@@ -108,6 +108,8 @@ class CASino::SessionsController < CASino::ApplicationController
       sign_in(validation_result, long_term: params[:rememberMe], credentials_supplied: true, is_api: params[:is_api],host: params[:host])
     end
   end
+
+  private
 
   def show_login_error_for_api(message)
     render json: { status: 'failed', message: message } and return
