@@ -9,7 +9,6 @@ module CASino::AuthenticationProcessor
     authenticators.each do |authenticator_name, authenticator|
       begin
         data = authenticator.validate(username, password)
-        Rails.logger.info("******* validate_login_credentials-data: #{data}")
       rescue CASino::Authenticator::AuthenticatorError => e
         Rails.logger.error "Authenticator '#{authenticator_name}' (#{authenticator.class}) raised an error: #{e}"
       end
@@ -19,7 +18,6 @@ module CASino::AuthenticationProcessor
         break
       end
     end
-    Rails.logger.info("******* validate_login_credentials- authentication_result: #{authentication_result}")
     authentication_result
   end
 

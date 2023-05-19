@@ -25,40 +25,33 @@ class CASino::SessionsController < CASino::ApplicationController
   end
 
   def create
-    if params["g-recaptcha-response"].blank?    
-      # show_login_error("Please Verify Recaptcha")
-      flash.now[:error] = "Please Verify Recaptcha"
-      render :new
-      return
-    end
-    body = {
-      "response" => params["g-recaptcha-response"],
-      "secret" => ENV['RECAPTCHA_SECRET_KEY']
-    }
-    captcha_url = "https://www.google.com/recaptcha/api/siteverify"
-    begin    
-      response = HTTParty.post(captcha_url, :body => body)
-    rescue 
-      flash.now[:error] = "Something went wrong"
-      render :new
-      return
-    end
-    Rails.logger.info("#{response}")
-    if response["success"] == true
-      validation_result = validate_login_credentials(params[:username], params[:password])
-      if !validation_result
-        log_failed_login params[:username]
-        if params[:is_api] 
-          show_login_error_for_api I18n.t('login_credential_acceptor.invalid_login_credentials') 
-        else 
-          show_login_error I18n.t('login_credential_acceptor.invalid_login_credentials') 
-        end
-      else
-        sign_in(validation_result, long_term: params[:rememberMe], credentials_supplied: true, is_api: params[:is_api],host: params[:host])
-      end
+    if params.has_key?("customer_app")?
+      validate_login
     else
-      flash.now[:error] = "Please Verify Recaptcha"
-      render :new
+      if params["g-recaptcha-response"].blank? 
+        # show_login_error("Please Verify Recaptcha")
+        flash.now[:error] = "Please Verify Recaptcha"
+        render :new
+        return
+      end
+      body = {
+        "response" => params["g-recaptcha-response"],
+        "secret" => ENV['RECAPTCHA_SECRET_KEY']
+      }
+      captcha_url = "https://www.google.com/recaptcha/api/siteverify"
+      begin    
+        response = HTTParty.post(captcha_url, :body => body)
+      rescue 
+        flash.now[:error] = "Something went wrong"
+        render :new
+        return
+      end
+      if response["success"] == true
+        validate_login
+      else
+        flash.now[:error] = "Please Verify Recaptcha"
+        render :new
+      end
     end
   end
 
@@ -100,6 +93,20 @@ class CASino::SessionsController < CASino::ApplicationController
   end
 
   private
+
+  def validate_login
+    validation_result = validate_login_credentials(params[:username], params[:password])
+    if !validation_result
+      log_failed_login params[:username]
+      if params[:is_api] 
+        show_login_error_for_api I18n.t('login_credential_acceptor.invalid_login_credentials') 
+      else 
+        show_login_error I18n.t('login_credential_acceptor.invalid_login_credentials') 
+      end
+    else
+      sign_in(validation_result, long_term: params[:rememberMe], credentials_supplied: true, is_api: params[:is_api],host: params[:host])
+    end
+  end
 
   def show_login_error_for_api(message)
     render json: { status: 'failed', message: message } and return
