@@ -25,8 +25,8 @@ class CASino::SessionsController < CASino::ApplicationController
   end
 
   def create
-    puts "!!!!!#{params["service"]}"
-    if params["service"] == "/api/v1/customer_app/login"   #.has_key?("customer_app")
+    Rails.logger.info "!!!!!#{params["service"]}"
+    if params["service"] == "/api/v1/customer_app/login"
       validate_login
     else
       if params["g-recaptcha-response"].blank? 
