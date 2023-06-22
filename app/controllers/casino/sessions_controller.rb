@@ -24,24 +24,29 @@ class CASino::SessionsController < CASino::ApplicationController
   end
 
   def create
+    if params["g-recaptcha-response"].blank?
+      flash.now[:error] = "Please Verify Recaptcha"
+      render :new
+      return
+    end
+    body = {
+      "response" => params["g-recaptcha-response"],
+      "secret" => ENV['RECAPTCHA_SECRET_KEY']
+    }
+    captcha_url = "https://www.google.com/recaptcha/api/siteverify"
+    begin
+      response = HTTParty.post(captcha_url, :body => body)
+    rescue
+      flash.now[:error] = "Something went wrong"
+      render :new
+      return
+    end
     params[:username] = params[:username].strip if params[:username].present?
-    validation_result , error = validate_login_credentials(params[:username], params[:password])
-    if !validation_result
-      log_failed_login params[:username]
-       if params[:is_api] 
-        error_msg = error.present? ? error : I18n.t('login_credential_acceptor.invalid_login_credentials')
-        render json: { status: "failed", message: error_msg },status: :bad_request 
-        return
-       else 
-        if error.present?
-          show_login_error error
-        else
-          show_login_error I18n.t('login_credential_acceptor.invalid_login_credentials') 
-        end
-       end
+    if response["success"] == true
+      validate_login
     else
-      sign_in(validation_result, long_term: params[:rememberMe], 
-              credentials_supplied: true, is_api: params[:is_api])
+      flash.now[:error] = "Please Verify Recaptcha"
+      render :new
     end
   end
 
@@ -82,6 +87,27 @@ class CASino::SessionsController < CASino::ApplicationController
   end
 
   private
+
+  def validate_login
+    validation_result , error = validate_login_credentials(params[:username], params[:password])
+    if !validation_result
+      log_failed_login params[:username]
+       if params[:is_api] 
+        error_msg = error.present? ? error : I18n.t('login_credential_acceptor.invalid_login_credentials')
+        render json: { status: "failed", message: error_msg },status: :bad_request 
+        return
+       else 
+        if error.present?
+          show_login_error error
+        else
+          show_login_error I18n.t('login_credential_acceptor.invalid_login_credentials') 
+        end
+       end
+    else
+      sign_in(validation_result, long_term: params[:rememberMe], 
+              credentials_supplied: true, is_api: params[:is_api])
+    end
+  end
 
   def show_login_error(message)
     flash.now[:error] = message
