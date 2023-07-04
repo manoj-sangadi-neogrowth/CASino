@@ -24,29 +24,33 @@ class CASino::SessionsController < CASino::ApplicationController
   end
 
   def create
-    if params["g-recaptcha-response"].blank?
-      flash.now[:error] = "Please Verify Recaptcha"
-      render :new
-      return
-    end
-    body = {
-      "response" => params["g-recaptcha-response"],
-      "secret" => ENV['RECAPTCHA_SECRET_KEY']
-    }
-    captcha_url = "https://www.google.com/recaptcha/api/siteverify"
-    begin
-      response = HTTParty.post(captcha_url, :body => body)
-    rescue
-      flash.now[:error] = "Something went wrong"
-      render :new
-      return
-    end
-    params[:username] = params[:username].strip if params[:username].present?
-    if response["success"] == true
+    if params[:is_api] == 'true'
       validate_login
     else
-      flash.now[:error] = "Please Verify Recaptcha"
-      render :new
+      if params["g-recaptcha-response"].blank?
+        flash.now[:error] = "Please Verify Recaptcha"
+        render :new
+        return
+      end
+      body = {
+        "response" => params["g-recaptcha-response"],
+        "secret" => ENV['RECAPTCHA_SECRET_KEY']
+      }
+      captcha_url = "https://www.google.com/recaptcha/api/siteverify"
+      begin
+        response = HTTParty.post(captcha_url, :body => body)
+      rescue
+        flash.now[:error] = "Something went wrong"
+        render :new
+        return
+      end
+      params[:username] = params[:username].strip if params[:username].present?
+      if response["success"] == true
+        validate_login
+      else
+        flash.now[:error] = "Please Verify Recaptcha"
+        render :new
+      end
     end
   end
 
