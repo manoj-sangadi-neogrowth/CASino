@@ -24,7 +24,7 @@ class CASino::SessionsController < CASino::ApplicationController
   end
 
   def create
-    if params[:is_api] == 'true'
+    if params[:is_api] == true
       validate_login
     else
       if params["g-recaptcha-response"].blank?
